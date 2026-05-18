@@ -34,12 +34,33 @@
     </div>
     <div id="app"></div>
 
+<script src="i18n.js"></script>
 <script>
 // ==================================
 // CONFIG
 // ==================================
 let BACKEND_URL = 'http://localhost:8080';
 let DEMO_MODE = true;
+let CURRENT_LANG = localStorage.getItem('stirling-lang') || navigator.language?.replace('_','-') || 'en-GB';
+// Resolve to closest match
+if (!I18N[CURRENT_LANG]) {
+  const prefix = CURRENT_LANG.split('-')[0];
+  CURRENT_LANG = Object.keys(I18N).find(k => k.startsWith(prefix)) || 'en-GB';
+}
+
+function t(key) {
+  const lang = I18N[CURRENT_LANG];
+  return (lang && lang[key]) || (I18N['en-GB'] && I18N['en-GB'][key]) || key;
+}
+function toolName(toolId) { return t('t.' + toolId); }
+function toolDesc(toolId) { return t('d.' + toolId); }
+function setLanguage(lang) {
+  CURRENT_LANG = lang;
+  localStorage.setItem('stirling-lang', lang);
+  document.documentElement.dir = I18N_RTL.includes(lang) ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  router.resolve();
+}
 let BACKEND_STATUS = {
   premiumEnabled: false,
   runningProOrHigher: false,
@@ -296,6 +317,11 @@ function renderHeader() {
         </a>
         <nav class="flex items-center gap-4">
           <a href="#/" class="text-gray-600 hover:text-primary-600 transition-colors font-medium text-sm">All Tools</a>
+          <select id="langSelect" onchange="setLanguage(this.value)" class="text-xs border rounded-lg px-2 py-1 bg-white">
+            ${Object.entries(I18N_LANGUAGES).map(([code, name]) => 
+              `<option value="${code}" ${code === CURRENT_LANG ? 'selected' : ''}>${name}</option>`
+            ).join('')}
+          </select>
           <span class="text-xs px-2 py-1 rounded-full ${DEMO_MODE ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}">
             ${DEMO_MODE ? '● Demo' : '● Connected'}
           </span>
@@ -324,8 +350,8 @@ function renderToolCard(tool) {
         <div class="flex items-start gap-3">
           <div class="text-2xl flex-shrink-0 group-hover:scale-110 transition-transform">${cat.icon}</div>
           <div class="flex-1 min-w-0">
-            <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">${tool.name}</h3>
-            <p class="text-sm text-gray-500 mt-1 line-clamp-2">${tool.desc}</p>
+            <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">${toolName(tool.id) || tool.name}</h3>
+            <p class="text-sm text-gray-500 mt-1 line-clamp-2">${toolDesc(tool.id) || tool.desc}</p>
           </div>
         </div>
       </div>
@@ -365,16 +391,16 @@ const app = document.getElementById('app');
 function renderHomePage() {
   const searchSection = `
     <div class="text-center space-y-4 py-8">
-      <h2 class="text-3xl font-bold text-gray-900">Free PDF Tools</h2>
+      <h2 class="text-3xl font-bold text-gray-900">${t('ui.freeTools')}</h2>
       <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-        All the PDF tools you need - merge, split, convert, compress, and more.
+        ${t('ui.noLicense')}
         <br><span class="text-primary-600 font-medium">No license required. 100% Free.</span>
       </p>
       <div class="max-w-md mx-auto relative">
         <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-        <input type="text" id="searchInput" placeholder="Search tools..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+        <input type="text" id="searchInput" placeholder="${t('ui.search')}" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
       </div>
     </div>
   `;
@@ -386,7 +412,7 @@ function renderHomePage() {
         return `
           <a href="#/category/${cat.id}" class="bg-white rounded-xl border border-gray-200 p-5 text-center hover:shadow-lg hover:border-primary-300 transition-all group">
             <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">${cat.icon}</div>
-            <h3 class="font-semibold text-gray-900 text-sm">${cat.name}</h3>
+            <h3 class="font-semibold text-gray-900 text-sm">${t('cat.' + cat.id) || cat.name}</h3>
             <p class="text-xs text-gray-500 mt-1">${count} tools</p>
           </a>
         `;
