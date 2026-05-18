@@ -2239,21 +2239,133 @@ TOOL_AR_META = {
 # ============================================================
 
 def generate_howto_steps_json(slug, lang, tool_data):
-    """Generate HowTo schema JSON steps."""
-    if lang == "en":
-        steps_data = [
-            ("Upload your file", "Open Stirling PDF and upload your PDF document to the tool interface."),
-            ("Configure settings", "Adjust the tool settings according to your specific requirements."),
-            ("Process the document", "Click the action button to process your document with the selected settings."),
-            ("Download the result", "Download your processed file once the operation is complete."),
-        ]
-    else:
-        steps_data = [
-            ("ارفع ملفك", "افتح Stirling PDF وارفع مستند PDF إلى واجهة الأداة."),
-            ("اضبط الإعدادات", "عدّل إعدادات الأداة وفقاً لمتطلباتك المحددة."),
-            ("عالج المستند", "انقر زر الإجراء لمعالجة مستندك بالإعدادات المحددة."),
-            ("حمّل النتيجة", "حمّل ملفك المعالج بمجرد اكتمال العملية."),
-        ]
+    """Generate HowTo schema JSON steps - TOOL-SPECIFIC for each tool."""
+    HOWTO_STEPS_EN = {
+        "merge-pdf": [
+            ("Upload Your PDF Files", "Drag and drop multiple PDF files into the upload area or click to browse. Select as many files as you need to merge."),
+            ("Arrange the Page Order", "Rearrange uploaded files into your preferred order by dragging and dropping them into the correct sequence."),
+            ("Click Merge and Download", "Press the Merge button to combine all PDF files into one document. Download the merged PDF instantly."),
+            ("Verify Your Merged Document", "Open the downloaded file to confirm all pages appear correctly with proper formatting and bookmarks."),
+        ],
+        "split-pdf": [
+            ("Upload Your PDF Document", "Drag and drop your PDF file into the upload area. The tool accepts PDF files of any size with any number of pages."),
+            ("Choose Your Split Method", "Select how to split: by page ranges, into individual pages, at regular intervals, or by extracting specific sections."),
+            ("Define Page Ranges", "Enter page numbers or ranges like '1-5, 8, 11-15' to create multiple output files with exactly the pages you need."),
+            ("Split and Download Results", "Click Split to process. Download resulting files individually or as a ZIP archive containing all segments."),
+        ],
+        "compress-pdf": [
+            ("Upload Your PDF File", "Drag and drop your PDF into the upload area. The tool displays the current file size for reference."),
+            ("Select Compression Level", "Choose compression intensity: light preserves maximum quality, medium is balanced, high achieves smallest size."),
+            ("Compress and Review", "Click Compress to process. View original size, compressed size, and percentage reduction to evaluate results."),
+            ("Download Optimized File", "Download your compressed PDF. Try different compression levels if needed until you find the perfect balance."),
+        ],
+        "convert-pdf-to-word": [
+            ("Upload Your PDF File", "Drag and drop your PDF document into the converter. The tool accepts any PDF regardless of complexity."),
+            ("Configure Conversion Settings", "Choose whether to prioritize layout fidelity or text editability, and whether to include images."),
+            ("Convert to Word Format", "Click Convert to transform your PDF into a properly formatted DOCX file with editable text and preserved layout."),
+            ("Download and Edit", "Download your Word document and open it in any word processor. All text is fully editable with proper formatting."),
+        ],
+        "convert-word-to-pdf": [
+            ("Upload Your Word Document", "Drag and drop your DOCX or DOC file into the upload area. Both modern and legacy formats are supported."),
+            ("Review Conversion Settings", "Default settings produce optimal results. Advanced users can adjust PDF quality for specific output requirements."),
+            ("Convert to PDF", "Click Convert to transform your Word document into PDF format in seconds while preserving all formatting."),
+            ("Download Your PDF", "Download the generated PDF file. The document is ready for sharing, printing, or uploading to any system."),
+        ],
+        "convert-pdf-to-excel": [
+            ("Upload Your PDF with Tables", "Drag and drop your PDF containing tables. Works with financial reports, invoices, and data exports."),
+            ("Configure Table Detection", "The tool auto-detects tables. Specify which pages contain tables or adjust detection sensitivity for complex documents."),
+            ("Convert to Excel Format", "Click Convert to extract tabular data and generate an Excel spreadsheet with preserved column alignment and formatting."),
+            ("Download and Analyze", "Download your XLSX file. All data is structured in cells ready for formulas, pivot tables, and charts."),
+        ],
+        "convert-pdf-to-image": [
+            ("Upload Your PDF Document", "Drag and drop your PDF file. The tool accepts multi-page PDFs and converts each page into a separate image."),
+            ("Select Output Format and Quality", "Choose image format (JPG, PNG, TIFF) and set resolution DPI. Higher DPI means sharper images but larger files."),
+            ("Convert Pages to Images", "Click Convert to render PDF pages as images. Each page becomes a separate numbered image file."),
+            ("Download Your Images", "Download individual page images or all pages as a ZIP archive. Images are ready for immediate use."),
+        ],
+        "convert-image-to-pdf": [
+            ("Upload Your Images", "Drag and drop image files (JPG, PNG, TIFF, BMP, WebP). Select multiple files for a multi-page PDF document."),
+            ("Arrange Image Order", "Reorder images by dragging them into your preferred sequence. Each image becomes one page in the PDF."),
+            ("Configure Page Settings", "Select page size (A4, Letter, or fit to image), orientation, and margin settings for professional output."),
+            ("Convert and Download PDF", "Click Convert to create your PDF document containing all images as properly formatted pages."),
+        ],
+        "ocr-pdf": [
+            ("Upload Your Scanned PDF", "Drag and drop your scanned PDF or image-based PDF. The tool accepts any PDF containing image pages."),
+            ("Select OCR Language", "Choose document language(s) for optimal accuracy. Select multiple languages for mixed-language documents."),
+            ("Run OCR Processing", "Click OCR to begin text recognition. The engine analyzes each page and creates a precise text layer."),
+            ("Download Searchable PDF", "Download the OCR-processed PDF with searchable, selectable text while maintaining original appearance."),
+        ],
+        "edit-pdf": [
+            ("Upload Your PDF Document", "Drag and drop the PDF you want to edit. The document opens in the interactive editor showing all pages."),
+            ("Select Your Editing Tool", "Choose from the toolbar: text, images, shapes, highlight, annotations, or freehand drawing tools."),
+            ("Make Your Edits", "Click on the page to add content. Type text, position images, draw annotations. Move and resize elements."),
+            ("Save and Download", "Click Save to apply all changes and download the modified PDF with original document quality preserved."),
+        ],
+    }
+    HOWTO_STEPS_AR = {
+        "merge-pdf": [
+            ("ارفع ملفات PDF الخاصة بك", "اسحب وأفلت عدة ملفات PDF في منطقة الرفع أو انقر لتصفح جهازك. حدد أي عدد من الملفات للدمج."),
+            ("رتّب ترتيب الصفحات", "أعد ترتيب الملفات المرفوعة حسب تفضيلك بالسحب والإفلات إلى التسلسل الصحيح."),
+            ("انقر دمج وحمّل", "اضغط زر الدمج لجمع كل ملفات PDF في مستند واحد. حمّل ملف PDF المدمج فوراً."),
+            ("تحقق من المستند المدمج", "افتح الملف المحمّل للتأكد من ظهور جميع الصفحات بالترتيب الصحيح مع التنسيق المناسب."),
+        ],
+        "split-pdf": [
+            ("ارفع مستند PDF الخاص بك", "اسحب وأفلت ملف PDF في منطقة الرفع. تقبل الأداة ملفات بأي حجم وأي عدد صفحات."),
+            ("اختر طريقة التقسيم", "حدد كيف تريد التقسيم: حسب نطاقات صفحات، إلى صفحات فردية، على فترات منتظمة، أو باستخراج أقسام."),
+            ("حدد نطاقات الصفحات", "أدخل أرقام الصفحات أو النطاقات مثل '1-5, 8, 11-15' لإنشاء ملفات مخرجات متعددة."),
+            ("قسّم وحمّل النتائج", "انقر تقسيم للمعالجة. حمّل الملفات الناتجة فردياً أو كأرشيف ZIP."),
+        ],
+        "compress-pdf": [
+            ("ارفع ملف PDF الخاص بك", "اسحب وأفلت ملف PDF في منطقة الرفع. تعرض الأداة حجم الملف الحالي كمرجع."),
+            ("حدد مستوى الضغط", "اختر كثافة الضغط: خفيف يحافظ على أقصى جودة، متوسط متوازن، عالي يحقق أصغر حجم."),
+            ("اضغط وراجع", "انقر ضغط للمعالجة. شاهد الحجم الأصلي والمضغوط ونسبة التخفيض لتقييم النتائج."),
+            ("حمّل الملف المحسّن", "حمّل PDF المضغوط. جرّب مستويات مختلفة إذا لزم الأمر حتى تجد التوازن المثالي."),
+        ],
+        "convert-pdf-to-word": [
+            ("ارفع ملف PDF الخاص بك", "اسحب وأفلت مستند PDF في المحول. تقبل الأداة أي ملف PDF بغض النظر عن تعقيده."),
+            ("اضبط إعدادات التحويل", "اختر ما إذا كنت تريد إعطاء الأولوية لأمانة التخطيط أو قابلية تعديل النص وتضمين الصور."),
+            ("حوّل إلى صيغة Word", "انقر تحويل لإنشاء ملف DOCX منسق بشكل صحيح مع نص قابل للتعديل وتخطيط محفوظ."),
+            ("حمّل وعدّل", "حمّل مستند Word وافتحه في أي معالج نصوص. كل النص قابل للتعديل بالكامل."),
+        ],
+        "convert-word-to-pdf": [
+            ("ارفع مستند Word الخاص بك", "اسحب وأفلت ملف DOCX أو DOC في منطقة الرفع. الصيغتان مدعومتان بالكامل."),
+            ("راجع إعدادات التحويل", "الإعدادات الافتراضية تنتج نتائج مثالية. يمكن للمتقدمين تعديل إعدادات الجودة."),
+            ("حوّل إلى PDF", "انقر تحويل لتحويل مستند Word إلى PDF في ثوانٍ مع الحفاظ على كل التنسيق."),
+            ("حمّل ملف PDF الخاص بك", "حمّل PDF المُنشأ. المستند جاهز للمشاركة أو الطباعة أو الرفع."),
+        ],
+        "convert-pdf-to-excel": [
+            ("ارفع ملف PDF الذي يحتوي جداول", "اسحب وأفلت PDF الذي يحتوي جداول. يعمل مع التقارير المالية والفواتير."),
+            ("اضبط كشف الجداول", "تكتشف الأداة الجداول تلقائياً. حدد الصفحات أو اضبط حساسية الكشف للمستندات المعقدة."),
+            ("حوّل إلى صيغة Excel", "انقر تحويل لاستخراج البيانات وإنشاء جدول بيانات Excel مع محاذاة وتنسيق محفوظين."),
+            ("حمّل وحلّل", "حمّل ملف XLSX. البيانات مهيكلة في خلايا جاهزة للصيغ والرسوم البيانية والتحليل."),
+        ],
+        "convert-pdf-to-image": [
+            ("ارفع مستند PDF الخاص بك", "اسحب وأفلت ملف PDF. تقبل الأداة ملفات متعددة الصفحات وتحول كل صفحة إلى صورة منفصلة."),
+            ("حدد صيغة المخرجات والجودة", "اختر صيغة الصورة (JPG أو PNG أو TIFF) واضبط دقة DPI. دقة أعلى تعني صوراً أوضح."),
+            ("حوّل الصفحات إلى صور", "انقر تحويل لتحويل صفحات PDF إلى صور. كل صفحة تصبح ملف صورة مرقم."),
+            ("حمّل صورك", "حمّل صور الصفحات فردياً أو جميعها كأرشيف ZIP. جاهزة للاستخدام الفوري."),
+        ],
+        "convert-image-to-pdf": [
+            ("ارفع صورك", "اسحب وأفلت ملفات صور (JPG وPNG وTIFF وBMP وWebP). حدد ملفات متعددة لملف PDF متعدد الصفحات."),
+            ("رتّب ترتيب الصور", "أعد ترتيب الصور بسحبها إلى التسلسل المفضل. كل صورة تصبح صفحة في PDF."),
+            ("اضبط إعدادات الصفحة", "حدد حجم الصفحة (A4 أو Letter أو مطابقة الصورة) والاتجاه والهوامش."),
+            ("حوّل وحمّل PDF", "انقر تحويل لإنشاء مستند PDF يحتوي جميع صورك كصفحات منسقة بشكل صحيح."),
+        ],
+        "ocr-pdf": [
+            ("ارفع ملف PDF الممسوح ضوئياً", "اسحب وأفلت PDF الممسوح أو القائم على الصور. تقبل الأداة أي PDF يحتوي صفحات صور."),
+            ("حدد لغة OCR", "اختر لغة/لغات المستند لدقة مثالية. حدد عدة لغات للمحتوى متعدد اللغات."),
+            ("شغّل معالجة OCR", "انقر OCR لبدء التعرف على النص. يحلل المحرك كل صفحة وينشئ طبقة نصية دقيقة."),
+            ("حمّل PDF القابل للبحث", "حمّل PDF المعالج بنص قابل للبحث والتحديد مع الحفاظ على المظهر الأصلي."),
+        ],
+        "edit-pdf": [
+            ("ارفع مستند PDF الخاص بك", "اسحب وأفلت PDF الذي تريد تعديله. يُفتح المستند في المحرر التفاعلي."),
+            ("حدد أداة التعديل", "اختر من الأدوات: نص، صور، أشكال، تمييز، تعليقات، أو الرسم الحر."),
+            ("أجرِ تعديلاتك", "انقر على الصفحة لإضافة المحتوى. اكتب وضع الصور وارسم. حرّك العناصر وغيّر حجمها."),
+            ("احفظ وحمّل", "انقر حفظ لتطبيق التغييرات وتحميل PDF المعدّل مع الحفاظ على جودة المستند الأصلي."),
+        ],
+    }
+    
+    steps_data = HOWTO_STEPS_EN.get(slug, HOWTO_STEPS_EN["merge-pdf"]) if lang == "en" else HOWTO_STEPS_AR.get(slug, HOWTO_STEPS_AR["merge-pdf"])
     
     items = []
     for i, (name, text) in enumerate(steps_data, 1):
@@ -2267,23 +2379,153 @@ def generate_howto_steps_json(slug, lang, tool_data):
 
 
 def generate_faq_schema_json(slug, lang, tool_data):
-    """Generate FAQ schema JSON items."""
-    if lang == "en":
-        faqs = [
-            ("Is this tool completely free?", "Yes, Stirling PDF is 100% free and open source. There are no hidden fees, no premium tiers, and no watermarks added to your documents."),
-            ("Is my data secure?", "Absolutely. Your files are processed locally or on your self-hosted server. No data is sent to third-party services or stored permanently."),
-            ("Do I need to create an account?", "No registration or account creation is needed. You can use all tools immediately without signing up or providing any personal information."),
-            ("What file size limits exist?", "There are no file size limits. You can process documents of any size without restrictions."),
-            ("Can I use this on my phone?", "Yes, Stirling PDF works on all devices including smartphones, tablets, and desktop computers through any modern web browser."),
-        ]
-    else:
-        faqs = [
-            ("هل هذه الأداة مجانية تماماً؟", "نعم، Stirling PDF مجاني 100% ومفتوح المصدر. لا توجد رسوم مخفية ولا مستويات مدفوعة ولا علامات مائية تُضاف إلى مستنداتك."),
-            ("هل بياناتي آمنة؟", "بالتأكيد. تتم معالجة ملفاتك محلياً أو على خادمك المستضاف ذاتياً. لا تُرسل بيانات إلى خدمات خارجية ولا تُخزن بشكل دائم."),
-            ("هل أحتاج إلى إنشاء حساب؟", "لا حاجة للتسجيل أو إنشاء حساب. يمكنك استخدام جميع الأدوات فوراً بدون تسجيل أو تقديم أي معلومات شخصية."),
-            ("ما حدود حجم الملف؟", "لا توجد حدود لحجم الملف. يمكنك معالجة مستندات بأي حجم بدون قيود."),
-            ("هل يمكنني استخدام هذا على هاتفي؟", "نعم، يعمل Stirling PDF على جميع الأجهزة بما في ذلك الهواتف والأجهزة اللوحية وأجهزة الكمبيوتر من خلال أي متصفح ويب حديث."),
-        ]
+    """Generate FAQ schema JSON items - TOOL-SPECIFIC for each tool."""
+    FAQ_EN = {
+        "merge-pdf": [
+            ("Is there a limit on how many PDF files I can merge?", "No, Stirling PDF has no limit on the number of files you can merge. Combine two or two hundred files efficiently without restrictions."),
+            ("Will merging reduce the quality of my documents?", "No, the merge preserves all original quality. Text, images, and vector graphics remain unchanged."),
+            ("Are my files safe when using the online PDF merger?", "Absolutely. Files are processed locally in your browser. Documents are never uploaded to third-party servers."),
+            ("Can I merge password-protected PDF files?", "Yes, if you know the password. Enter it for each protected file before merging."),
+            ("Does the merged PDF include bookmarks from original files?", "Yes, bookmarks from all source files are preserved in order for easy navigation."),
+        ],
+        "split-pdf": [
+            ("Can I split a PDF into individual pages?", "Yes, select 'Split into individual pages' to create separate PDF files for each page, downloadable as a ZIP archive."),
+            ("Does splitting affect page quality?", "No, each extracted page retains its original resolution, fonts, images, and formatting without any modification."),
+            ("Can I extract non-consecutive pages?", "Absolutely. Use notation like '1, 5, 8-12, 20' to extract any combination of pages into a new PDF."),
+            ("Is there a maximum file size for splitting?", "No file size limits. Split PDFs of any size efficiently without performance issues."),
+            ("Can I split a password-protected PDF?", "Yes, if you know the password. Authenticate first, then split into desired page ranges."),
+        ],
+        "compress-pdf": [
+            ("How much can I reduce my PDF file size?", "Typically 50-90% reduction. Image-heavy PDFs see greatest savings; text-heavy documents save 20-40%."),
+            ("Will compression make my PDF look blurry?", "With recommended settings, the difference is virtually imperceptible. Text always remains perfectly sharp."),
+            ("Can I compress below a specific size target?", "Use different compression levels to achieve desired results. Medium compression usually meets email limits."),
+            ("Does compression remove any content?", "No visible content is removed. Only redundant internal data, image encoding, and metadata are optimized."),
+            ("Can I compress multiple files at once?", "Yes, batch compression is supported. Upload multiple files and apply same settings simultaneously."),
+        ],
+        "convert-pdf-to-word": [
+            ("Will the Word file look exactly like my PDF?", "Very close results for most documents. Some minor differences may occur with complex decorative elements."),
+            ("Can I convert a scanned PDF to editable Word?", "Yes, first use OCR to recognize text, then convert to Word for fully editable content."),
+            ("Are fonts preserved during conversion?", "The converter matches fonts. If exact fonts unavailable, closest matching substitutes are used."),
+            ("Is there a page limit for conversion?", "No page limit. Convert PDFs with any number of pages to Word format completely."),
+            ("Does it handle multi-column layouts?", "Yes, multi-column layouts are detected and recreated using proper Word column formatting."),
+        ],
+        "convert-word-to-pdf": [
+            ("Will my Word formatting be preserved?", "Yes, all formatting including fonts, colors, margins, tables, images, headers, and footers are preserved."),
+            ("Can I convert DOC files as well as DOCX?", "Yes, both modern DOCX and legacy DOC formats are fully supported from all Word versions."),
+            ("Are hyperlinks preserved in the PDF?", "Yes, all hyperlinks remain active and clickable. Both external and internal links are preserved."),
+            ("Is the PDF suitable for printing?", "Absolutely. Print-quality output with proper color management and high-resolution image preservation."),
+            ("Can I convert multiple Word files at once?", "Yes, batch conversion is supported. Convert multiple documents simultaneously."),
+        ],
+        "convert-pdf-to-excel": [
+            ("Can it handle PDFs with multiple tables?", "Yes, each table is placed on individual worksheets within the Excel file for organization."),
+            ("Will numbers be actual numbers or text?", "The converter recognizes numerical data and formats cells as numbers for immediate formula use."),
+            ("Does it work with scanned documents?", "For scanned PDFs, use OCR first to extract text, then convert to Excel for usable data."),
+            ("Can I convert bank statements to Excel?", "Absolutely. Extracts dates, descriptions, amounts, and balances into structured columns."),
+            ("Is there a limit on pages or tables?", "No limits. Convert PDFs with any number of pages and tables completely."),
+        ],
+        "convert-pdf-to-image": [
+            ("What image formats are available?", "JPG (for web/photos), PNG (for text/transparency), and TIFF (for professional printing)."),
+            ("Can I control output resolution?", "Yes, full DPI control from 72 (web) to 300+ (print quality) for any output need."),
+            ("Will text remain sharp in images?", "Yes, at 150 DPI or above text is perfectly crisp. Use PNG format for sharpest text rendering."),
+            ("Can I convert specific pages only?", "Yes, select specific pages or ranges instead of converting the entire document."),
+            ("Are transparent backgrounds supported?", "PNG supports transparency. JPG fills transparent areas with white background."),
+        ],
+        "convert-image-to-pdf": [
+            ("What image formats can I convert?", "All major formats: JPG, PNG, TIFF, BMP, WebP, GIF. Mix different formats in one conversion."),
+            ("Can I combine multiple images into one PDF?", "Yes, upload any number of images. Each becomes one page, reorderable before conversion."),
+            ("Will image quality be reduced?", "No, images are embedded at original quality without recompression. Full resolution preserved."),
+            ("Can I set the page size?", "Yes, choose A4, Letter, or 'Fit to Image'. Control orientation and margins too."),
+            ("Is there a limit on image count?", "No limit. Convert one image or combine hundreds into one document efficiently."),
+        ],
+        "ocr-pdf": [
+            ("What languages does OCR support?", "Over 100 languages including English, Arabic, Chinese, Japanese, Korean, Russian, Hindi, and many more."),
+            ("Does OCR change my document's appearance?", "No, it adds an invisible text layer. The document looks exactly the same but gains searchability."),
+            ("Can OCR recognize handwritten text?", "Clear, consistent handwriting with reasonable accuracy. Printed text produces much higher accuracy."),
+            ("How accurate is text recognition?", "For clearly printed documents at 300 DPI with good contrast, accuracy typically exceeds 98-99%."),
+            ("Can I OCR a PDF that already has some text?", "Yes, it identifies image-only pages and applies OCR only to those, preserving existing text."),
+        ],
+        "edit-pdf": [
+            ("Can I edit existing text in the PDF?", "Add new text over existing content. For modifying existing text, cover with white rectangle then add new text."),
+            ("Can I add my signature?", "Yes, draw freehand, type in script font, or insert signature image. Position and resize precisely."),
+            ("Does editing affect original quality?", "No, edits are added as new elements. Original content remains at full quality."),
+            ("Can I fill PDF forms?", "Yes, fill any form whether interactive or not. Click fields or use text tool for flat forms."),
+            ("Is there an undo function?", "Yes, undo recent changes during your session. Re-upload original to start fresh anytime."),
+        ],
+    }
+    FAQ_AR = {
+        "merge-pdf": [
+            ("هل يوجد حد لعدد ملفات PDF التي يمكنني دمجها؟", "لا، ليس لدى Stirling PDF أي حد لعدد الملفات. ادمج ملفين أو مائتي ملف بكفاءة بدون قيود."),
+            ("هل سيقلل الدمج من جودة مستنداتي؟", "لا، عملية الدمج تحافظ على كل الجودة الأصلية. النص والصور والرسومات المتجهة تبقى بدون تغيير."),
+            ("هل ملفاتي آمنة عند استخدام أداة الدمج؟", "بالتأكيد. تُعالج الملفات محلياً في متصفحك. لا تُرفع المستندات إلى خوادم خارجية أبداً."),
+            ("هل يمكنني دمج ملفات PDF محمية بكلمة مرور؟", "نعم، إذا كنت تعرف كلمة المرور. أدخلها لكل ملف محمي قبل الدمج."),
+            ("هل يتضمن PDF المدمج الإشارات المرجعية من الملفات الأصلية؟", "نعم، تُحفظ الإشارات المرجعية من جميع الملفات المصدر بالترتيب لسهولة التنقل."),
+        ],
+        "split-pdf": [
+            ("هل يمكنني تقسيم PDF إلى صفحات فردية؟", "نعم، حدد 'تقسيم إلى صفحات فردية' لإنشاء ملفات PDF منفصلة لكل صفحة، قابلة للتحميل كأرشيف ZIP."),
+            ("هل يؤثر التقسيم على جودة الصفحات؟", "لا، كل صفحة مستخرجة تحتفظ بدقتها الأصلية وخطوطها وصورها وتنسيقها بدون أي تعديل."),
+            ("هل يمكنني استخراج صفحات غير متتالية؟", "بالتأكيد. استخدم صيغة مثل '1, 5, 8-12, 20' لاستخراج أي مجموعة صفحات في PDF جديد."),
+            ("هل يوجد حد أقصى لحجم الملف؟", "لا توجد حدود لحجم الملف. قسّم ملفات PDF بأي حجم بكفاءة."),
+            ("هل يمكنني تقسيم PDF محمي بكلمة مرور؟", "نعم، إذا كنت تعرف كلمة المرور. صادق أولاً ثم قسّم إلى النطاقات المطلوبة."),
+        ],
+        "compress-pdf": [
+            ("كم يمكنني تقليل حجم ملف PDF؟", "عادةً 50-90% تخفيض. ملفات PDF الغنية بالصور تشهد أكبر توفير؛ النصية توفر 20-40%."),
+            ("هل سيجعل الضغط PDF غير واضح؟", "مع الإعدادات الموصى بها، الفرق غير محسوس تقريباً. النص يبقى واضحاً دائماً."),
+            ("هل يمكنني الضغط إلى أقل من حجم محدد؟", "استخدم مستويات ضغط مختلفة لتحقيق النتيجة المطلوبة. المتوسط عادةً يلبي حدود البريد."),
+            ("هل يزيل الضغط أي محتوى؟", "لا يُزال أي محتوى مرئي. فقط البيانات المكررة الداخلية وترميز الصور والبيانات الوصفية تُحسّن."),
+            ("هل يمكنني ضغط عدة ملفات دفعة واحدة؟", "نعم، الضغط الدفعي مدعوم. ارفع ملفات متعددة وطبّق نفس الإعدادات في وقت واحد."),
+        ],
+        "convert-pdf-to-word": [
+            ("هل سيبدو ملف Word تماماً مثل PDF؟", "نتائج قريبة جداً لمعظم المستندات. قد تحدث اختلافات طفيفة مع عناصر زخرفية معقدة."),
+            ("هل يمكنني تحويل PDF ممسوح إلى Word قابل للتعديل؟", "نعم، استخدم OCR أولاً للتعرف على النص ثم حوّل إلى Word للحصول على محتوى قابل للتعديل."),
+            ("هل تُحفظ الخطوط أثناء التحويل؟", "يطابق المحول الخطوط. إذا لم تتوفر بالضبط، تُستخدم أقرب بدائل مطابقة."),
+            ("هل يوجد حد لعدد الصفحات؟", "لا حد. حوّل ملفات PDF بأي عدد صفحات إلى صيغة Word بالكامل."),
+            ("هل يتعامل مع التخطيطات متعددة الأعمدة؟", "نعم، يكتشف التخطيطات المتعددة ويعيد إنشاءها بتنسيق أعمدة Word المناسب."),
+        ],
+        "convert-word-to-pdf": [
+            ("هل سيُحفظ تنسيق Word في PDF؟", "نعم، كل التنسيق بما في ذلك الخطوط والألوان والهوامش والجداول والصور محفوظ."),
+            ("هل يمكنني تحويل ملفات DOC أيضاً؟", "نعم، صيغة DOCX الحديثة وDOC القديمة مدعومتان بالكامل من جميع إصدارات Word."),
+            ("هل تُحفظ الروابط في PDF؟", "نعم، جميع الروابط تبقى نشطة وقابلة للنقر. الخارجية والداخلية محفوظة."),
+            ("هل PDF مناسب للطباعة؟", "بالتأكيد. جودة طباعة مع إدارة ألوان مناسبة ودقة صور عالية."),
+            ("هل يمكنني تحويل عدة ملفات Word دفعة واحدة؟", "نعم، التحويل الدفعي مدعوم. حوّل عدة مستندات في وقت واحد."),
+        ],
+        "convert-pdf-to-excel": [
+            ("هل يتعامل مع ملفات PDF بها جداول متعددة؟", "نعم، كل جدول يوضع في ورقة عمل فردية داخل ملف Excel للتنظيم."),
+            ("هل ستكون الأرقام أرقاماً فعلية أم نص؟", "يتعرف المحول على البيانات الرقمية وينسق الخلايا كأرقام لاستخدام الصيغ فوراً."),
+            ("هل يعمل مع المستندات الممسوحة؟", "لملفات PDF الممسوحة، استخدم OCR أولاً لاستخراج النص ثم حوّل إلى Excel."),
+            ("هل يمكنني تحويل كشوف حسابات بنكية؟", "بالتأكيد. يستخرج التواريخ والأوصاف والمبالغ والأرصدة في أعمدة مهيكلة."),
+            ("هل يوجد حد لعدد الصفحات أو الجداول؟", "لا حدود. حوّل ملفات PDF بأي عدد صفحات وجداول بالكامل."),
+        ],
+        "convert-pdf-to-image": [
+            ("ما صيغ الصور المتاحة؟", "JPG (للويب والصور) وPNG (للنص والشفافية) وTIFF (للطباعة الاحترافية)."),
+            ("هل يمكنني التحكم في دقة المخرجات؟", "نعم، تحكم كامل بـ DPI من 72 (ويب) إلى 300+ (جودة طباعة) لأي احتياج."),
+            ("هل سيبقى النص واضحاً في الصور؟", "نعم، عند 150 DPI أو أعلى النص حاد تماماً. استخدم PNG لأوضح عرض نص."),
+            ("هل يمكنني تحويل صفحات محددة فقط؟", "نعم، حدد صفحات أو نطاقات محددة بدلاً من تحويل المستند كاملاً."),
+            ("هل الخلفيات الشفافة مدعومة؟", "PNG يدعم الشفافية. JPG يملأ المناطق الشفافة بخلفية بيضاء."),
+        ],
+        "convert-image-to-pdf": [
+            ("ما صيغ الصور التي يمكنني تحويلها؟", "جميع الصيغ الرئيسية: JPG وPNG وTIFF وBMP وWebP وGIF. امزج صيغاً مختلفة في تحويل واحد."),
+            ("هل يمكنني دمج عدة صور في PDF واحد؟", "نعم، ارفع أي عدد من الصور. كل صورة تصبح صفحة واحدة قابلة لإعادة الترتيب."),
+            ("هل ستنخفض جودة الصور؟", "لا، تُضمّن الصور بجودتها الأصلية بدون إعادة ضغط. الدقة الكاملة محفوظة."),
+            ("هل يمكنني تحديد حجم الصفحة؟", "نعم، اختر A4 أو Letter أو 'مطابقة الصورة'. تحكم في الاتجاه والهوامش أيضاً."),
+            ("هل يوجد حد لعدد الصور؟", "لا حد. حوّل صورة واحدة أو ادمج مئات في مستند واحد بكفاءة."),
+        ],
+        "ocr-pdf": [
+            ("ما اللغات التي يدعمها OCR؟", "أكثر من 100 لغة بما في ذلك العربية والإنجليزية والصينية واليابانية والكورية والروسية والهندية."),
+            ("هل يغير OCR مظهر مستندي؟", "لا، يضيف طبقة نصية غير مرئية. المستند يبدو تماماً كما هو لكنه يكتسب قابلية البحث."),
+            ("هل يمكن لـ OCR التعرف على الخط اليدوي؟", "الخط الواضح والمتسق بدقة معقولة. النص المطبوع ينتج دقة أعلى بكثير."),
+            ("ما مدى دقة التعرف على النص؟", "للمستندات المطبوعة بوضوح عند 300 DPI مع تباين جيد، تتجاوز الدقة 98-99%."),
+            ("هل يمكنني معالجة PDF يحتوي بالفعل نصاً؟", "نعم، يحدد الصفحات التي تفتقر لطبقة نصية ويطبق OCR عليها فقط مع الحفاظ على النص الموجود."),
+        ],
+        "edit-pdf": [
+            ("هل يمكنني تعديل النص الموجود في PDF؟", "أضف نصاً جديداً فوق المحتوى. لتعديل النص الموجود، غطِّ بمستطيل أبيض ثم أضف نصاً جديداً."),
+            ("هل يمكنني إضافة توقيعي؟", "نعم، ارسم حراً أو اكتب بخط رقعة أو أدرج صورة توقيع. ضعها وغيّر حجمها بدقة."),
+            ("هل يؤثر التعديل على جودة المستند؟", "لا، التعديلات تُضاف كعناصر جديدة. المحتوى الأصلي يبقى بجودته الكاملة."),
+            ("هل يمكنني ملء نماذج PDF؟", "نعم، املأ أي نموذج سواء كان تفاعلياً أم لا. انقر الحقول أو استخدم أداة النص."),
+            ("هل توجد وظيفة تراجع؟", "نعم، تراجع عن التغييرات أثناء الجلسة. أعد رفع الأصلي للبدء من جديد في أي وقت."),
+        ],
+    }
+    
+    faqs = FAQ_EN.get(slug, FAQ_EN["merge-pdf"]) if lang == "en" else FAQ_AR.get(slug, FAQ_AR["merge-pdf"])
     
     items = []
     for q, a in faqs:
