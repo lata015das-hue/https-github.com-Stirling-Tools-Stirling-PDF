@@ -1,3 +1,13 @@
 node_modules/
+dist/
 .DS_Store
 *.log
+
+# Environment files — NEVER commit secrets
+.env
+.env.production
+.env.local
+.env.*.local
+
+# Secrets directory
+secrets/
