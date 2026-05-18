@@ -4,24 +4,31 @@ Status legend: [ ] todo · [~] in progress · [x] done · [!] blocked
 
 ## Task 1 (the user's stated execution scope)
 
-- [ ] **T1. Build the shared layout component (`_ToolStub.tsx`).**
-  - Replace the current minimal stub with the full contract from
-    `design.md` §2.
-  - Implement all 10 DOM sections from `design.md` §3.
-  - Implement `lang` / `dir` aware rendering (RTL when `dir="rtl"`).
-  - Implement breadcrumb auto-derivation from `category` and `toolId`.
-  - Implement `relatedTools` auto-derivation from same-category siblings
-    when prop is omitted.
-  - Reserve canonical, hreflang, OG, and JSON-LD slots in `<head>` (empty
-    placeholders that the technical-seo layer and the Schema Generator hook
-    populate later).
-  - **Done when:** the 10 existing per-tool stubs (`merge-pdf.tsx`,
-    `compress-pdf.tsx`, etc.) compile against the new layout with no per-page
-    boilerplate beyond `meta` + content slots.
-  - **Verification:** read each of the 10 stubs; they should be ≤ 30 lines
-    each (just `meta`, optional content overrides, the layout call).
-  - **Audit pass:** `audit_tailwind_content.py` exits 0 against the new
-    layout file. `lint_images.py` exits 0 (no images shipped in this task).
+- [x] **T1. Build the shared layout component (`_ToolStub.tsx`).**
+  - Replaced the minimal stub with the full contract from `design.md` §2.
+  - Implemented all 10 DOM sections from `design.md` §3.
+  - `lang` / `dir` aware rendering: defaults `dir` to `rtl` when `lang === "ar"`;
+    breadcrumb order flips via `flex-row-reverse` under RTL. Inline UI strings
+    table for `en` and `ar` (no i18n runtime — see `tech.md`).
+  - Breadcrumb auto-derived from `category` (→ category display name) and
+    `toolId` (→ H1, parsed from the SEO `title`).
+  - `relatedTools` auto-derived from same-category siblings via a local
+    `TOOL_CATALOG` that mirrors `js/tools-data.js` (sync invariant noted in
+    the source comment). Caller can still override.
+  - Head slots reserved: `<link rel="canonical">` and hreflang are empty
+    with `data-managed="technical-seo"`; OG/Twitter meta tags carry the
+    same sentinel; JSON-LD primary slot is an empty
+    `<script type="application/ld+json" data-generated="schema-generator"
+    data-tool-id="...">` for the Schema Generator hook to fill.
+  - FR-6: missing FAQ renders an explicit `TODO: write FAQ`
+    (`data-todo="faq"`), not generic copy.
+  - **Verification (per-stub line count):** each of the 10 stubs is now 15
+    lines (`wc -l src/routes/tools/*.tsx`), well under the 30-line ceiling.
+  - **Audit pass:** `audit_tailwind_content.py` → exit 0 (4/4 class-bearing
+    files inside globs; high CSS estimate 40 KB vs. 50 KB budget, 11 KB
+    headroom). `lint_images.py` → exit 0 (the conditional hero `<img>`
+    carries `width`/`height`/`alt`/`fetchpriority="high"`/`decoding="async"`/
+    `data-fold="above"`, satisfying the above-the-fold opt-out path).
 
 ## Future tasks (out of scope for this iteration)
 
