@@ -40,6 +40,47 @@
 // ==================================
 let BACKEND_URL = 'http://localhost:8080';
 let DEMO_MODE = true;
+let BACKEND_STATUS = {
+  premiumEnabled: false,
+  runningProOrHigher: false,
+  runningEE: false,
+  license: 'NORMAL',
+  endpointsAvailability: {}, // { 'merge-pdfs': { enabled: true, reason: null } }
+  checked: false,
+};
+
+// SAFETY: Whitelist of EXACT endpoints we will call. Built from the TOOLS list at runtime.
+// Anything not in this set is rejected, regardless of prefix.
+let ALLOWED_EXACT_ENDPOINTS = null;
+
+function buildAllowedSet() {
+  if (ALLOWED_EXACT_ENDPOINTS) return ALLOWED_EXACT_ENDPOINTS;
+  ALLOWED_EXACT_ENDPOINTS = new Set(TOOLS.map(t => t.endpoint));
+  return ALLOWED_EXACT_ENDPOINTS;
+}
+
+// SAFETY: Blacklist - paths that require a license and must NEVER be called
+const FORBIDDEN_API_PREFIXES = [
+  '/api/v1/team/',                    // PremiumEndpoint (TeamController)
+  '/api/v1/audit/',                   // EnterpriseEndpoint (AuditDashboardController, AuditRestController)
+  '/api/v1/ai/',                      // AI Engine (AiEngineController, MathAuditorAgentController, PdfCommentAgentController)
+  '/api/v1/admin/',                   // Admin features (AdminLicenseController, AdminJobController, etc.)
+  '/api/v1/proprietary/',             // Proprietary signatures (SignatureController), UI data
+  '/api/v1/auth/',                    // Auth (proprietary AuthController)
+  '/api/v1/database/',                // Enterprise database (DatabaseControllerEnterprise)
+  '/api/v1/storage/',                 // Storage (FileStorageController)
+  '/api/v1/workflow/',                // Workflow (WorkflowParticipantController)
+  '/api/v1/security/cert-sign/sessions', // Signing sessions are proprietary
+  '/api/v1/admin/server-certificate', // Server certificate admin
+];
+
+function isAllowedEndpoint(endpoint) {
+  // Defence-in-depth: must match the exact whitelist AND not match the blacklist.
+  buildAllowedSet();
+  if (!ALLOWED_EXACT_ENDPOINTS.has(endpoint)) return false;
+  if (FORBIDDEN_API_PREFIXES.some(p => endpoint.startsWith(p))) return false;
+  return true;
+}
 
 // ==================================
 // TOOLS DATA
@@ -122,11 +163,66 @@ const getCategoryById = (id) => CATEGORIES.find(c => c.id === id);
 // ==================================
 // API
 // ==================================
+async function checkBackendStatus() {
+  try {
+    // 1) Get app config (license status)
+    const cfgRes = await fetch(BACKEND_URL + '/api/v1/config/app-config');
+    if (!cfgRes.ok) throw new Error('Cannot reach backend');
+    const cfg = await cfgRes.json();
+    BACKEND_STATUS.premiumEnabled = cfg.premiumEnabled === true;
+    BACKEND_STATUS.runningProOrHigher = cfg.runningProOrHigher === true;
+    BACKEND_STATUS.runningEE = cfg.runningEE === true;
+    BACKEND_STATUS.license = cfg.license || 'NORMAL';
+
+    // 2) Get availability of every endpoint we use
+    const endpointKeys = TOOLS.map(t => endpointKeyFromUri(t.endpoint)).filter(Boolean);
+    const params = new URLSearchParams();
+    endpointKeys.forEach(k => params.append('endpoints', k));
+    const availRes = await fetch(BACKEND_URL + '/api/v1/config/endpoints-availability?' + params.toString());
+    if (availRes.ok) {
+      BACKEND_STATUS.endpointsAvailability = await availRes.json();
+    }
+    BACKEND_STATUS.checked = true;
+    return true;
+  } catch (e) {
+    BACKEND_STATUS.checked = false;
+    return false;
+  }
+}
+
+// Convert /api/v1/general/merge-pdfs -> 'merge-pdfs', /api/v1/convert/pdf/img -> 'pdf-to-img'
+function endpointKeyFromUri(uri) {
+  if (!uri || !uri.includes('/api/v1')) return null;
+  const parts = uri.split('/').filter(Boolean);
+  // ['api','v1','<group>','<endpoint>'] or ['api','v1','convert','pdf','img']
+  if (parts.length < 4) return null;
+  if (parts[2] === 'convert' && parts.length >= 5) {
+    return parts[3] + '-to-' + parts[4];
+  }
+  return parts[3];
+}
+
 async function processPdf(endpoint, files, params = {}) {
+  // ===== SAFETY GATE 1: whitelist enforcement =====
+  if (!isAllowedEndpoint(endpoint)) {
+    throw new Error('Blocked: this endpoint is not on the free-tier whitelist.');
+  }
+
+  // ===== SAFETY GATE 2: Demo mode short-circuit =====
   if (DEMO_MODE) {
     await new Promise(r => setTimeout(r, 1500));
     throw new Error('Demo mode: enable backend connection to actually process files. Click "Connect to Backend" in the top banner.');
   }
+
+  // ===== SAFETY GATE 3: backend reports endpoint disabled =====
+  const key = endpointKeyFromUri(endpoint);
+  if (key && BACKEND_STATUS.checked) {
+    const avail = BACKEND_STATUS.endpointsAvailability[key];
+    if (avail && avail.enabled === false) {
+      throw new Error(`Endpoint disabled by backend (reason: ${avail.reason || 'unknown'}). This usually means it requires a license, missing dependency, or has been turned off in config.`);
+    }
+  }
+
   const formData = new FormData();
   files.forEach(file => formData.append('fileInput', file));
   Object.entries(params).forEach(([key, value]) => {
@@ -135,6 +231,7 @@ async function processPdf(endpoint, files, params = {}) {
   const response = await fetch(BACKEND_URL + endpoint, { method: 'POST', body: formData });
   if (!response.ok) {
     let errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+    if (response.status === 403) errorMsg = 'Forbidden: this endpoint requires a paid license (Server or Enterprise).';
     try { const text = await response.text(); if (text) errorMsg = text; } catch(e) {}
     throw new Error(errorMsg);
   }
@@ -210,8 +307,18 @@ function renderHeader() {
 
 function renderToolCard(tool) {
   const cat = getCategoryById(tool.category);
+  const k = endpointKeyFromUri(tool.endpoint);
+  const avail = BACKEND_STATUS.endpointsAvailability[k];
+  const isDisabled = !DEMO_MODE && BACKEND_STATUS.checked && avail && avail.enabled === false;
+  const disabledOverlay = isDisabled
+    ? `<div class="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200">Unavailable</div>`
+    : '';
+  const cardClasses = isDisabled
+    ? 'opacity-50 cursor-not-allowed pointer-events-none'
+    : 'hover:border-primary-300 hover:shadow-lg';
   return `
-    <a href="#/tool/${tool.id}" class="group block bg-white rounded-xl border border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all duration-200 overflow-hidden">
+    <a href="#/tool/${tool.id}" class="group block bg-white rounded-xl border border-gray-200 transition-all duration-200 overflow-hidden relative ${cardClasses}">
+      ${disabledOverlay}
       <div class="h-1.5 ${cat.color}"></div>
       <div class="p-5">
         <div class="flex items-start gap-3">
@@ -372,6 +479,32 @@ function renderToolPage(toolId) {
   const tool = getToolById(toolId);
   if (!tool) { renderHomePage(); return; }
   const cat = getCategoryById(tool.category);
+
+  // Safety check: is this endpoint allowed?
+  if (!isAllowedEndpoint(tool.endpoint)) {
+    app.innerHTML = `${renderHeader()}<main class="max-w-3xl mx-auto px-4 py-12 text-center">
+      <h2 class="text-2xl font-bold text-red-700">Tool Blocked</h2>
+      <p class="text-gray-600 mt-2">This tool is not available in the free-tier frontend.</p>
+      <a href="#/" class="inline-block mt-4 text-primary-600 underline">Back to home</a>
+    </main>${renderFooter()}`;
+    return;
+  }
+
+  // Check live availability
+  const k = endpointKeyFromUri(tool.endpoint);
+  const avail = BACKEND_STATUS.endpointsAvailability[k];
+  const isDisabled = !DEMO_MODE && BACKEND_STATUS.checked && avail && avail.enabled === false;
+  const disabledBanner = isDisabled ? `
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+      <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <p class="font-medium text-red-800">This endpoint is disabled by the backend</p>
+        <p class="text-sm text-red-600 mt-1">Reason: <code>${avail.reason || 'unknown'}</code>. This typically means the endpoint requires a license, has missing system dependencies (e.g. tesseract, libreoffice, ghostscript), or has been turned off in configuration.</p>
+      </div>
+    </div>
+  ` : '';
   const fieldsHtml = (tool.fields || []).map(field => {
     if (field.type === 'select') {
       return `<div>
@@ -403,7 +536,8 @@ function renderToolPage(toolId) {
         </div>
         <span class="ml-auto text-sm px-3 py-1 rounded-full border ${cat.colorLight}">${cat.name}</span>
       </div>
-      <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
+      ${disabledBanner}
+      <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6 ${isDisabled ? 'opacity-60' : ''}">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Upload File(s)</label>
           ${renderFileUpload(tool.multi)}
@@ -551,20 +685,54 @@ function setupToolPageInteraction(tool) {
 // ==================================
 // DEMO MODE TOGGLE
 // ==================================
-document.getElementById('toggleDemo').addEventListener('click', () => {
+document.getElementById('toggleDemo').addEventListener('click', async () => {
   const url = prompt('Enter Stirling-PDF backend URL:', BACKEND_URL);
-  if (url && url.trim()) {
-    BACKEND_URL = url.trim().replace(/\/$/, '');
-    DEMO_MODE = false;
-    document.getElementById('demoBanner').innerHTML = `
-      <strong>Connected</strong> to backend: <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code>
-      <button id="toggleDemo2" class="ml-3 underline font-medium hover:text-amber-900">Switch to Demo Mode</button>
-    `;
-    document.getElementById('demoBanner').className = 'bg-green-50 border-b border-green-200 px-4 py-2 text-center text-sm text-green-800';
-    document.getElementById('toggleDemo2').addEventListener('click', () => location.reload());
-    router.resolve();
+  if (!url || !url.trim()) return;
+  BACKEND_URL = url.trim().replace(/\/$/, '');
+
+  // Show checking state
+  const banner = document.getElementById('demoBanner');
+  banner.innerHTML = `<strong>Checking backend...</strong> <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code>`;
+  banner.className = 'bg-blue-50 border-b border-blue-200 px-4 py-2 text-center text-sm text-blue-800';
+
+  const reachable = await checkBackendStatus();
+  if (!reachable) {
+    banner.innerHTML = `<strong>Cannot reach backend</strong> at <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code> &mdash; check that Stirling-PDF is running.
+      <button onclick="location.reload()" class="ml-3 underline font-medium">Reset</button>`;
+    banner.className = 'bg-red-50 border-b border-red-200 px-4 py-2 text-center text-sm text-red-800';
+    return;
   }
+
+  // ===== SAFETY: Refuse to enable a paid backend =====
+  if (BACKEND_STATUS.runningProOrHigher || BACKEND_STATUS.runningEE) {
+    banner.innerHTML = `<strong>Refusing to connect.</strong>
+      Backend reports a paid license (${BACKEND_STATUS.license}). This frontend is free-tier only and will only run open-core endpoints.
+      <button id="forceConnect" class="ml-3 underline font-medium">Connect anyway (free tools only)</button>
+      <button onclick="location.reload()" class="ml-3 underline font-medium">Reset</button>`;
+    banner.className = 'bg-orange-50 border-b border-orange-200 px-4 py-2 text-center text-sm text-orange-800';
+    document.getElementById('forceConnect').addEventListener('click', () => activateBackendMode(true));
+    return;
+  }
+
+  activateBackendMode(false);
 });
+
+function activateBackendMode(forced) {
+  DEMO_MODE = false;
+  // Count how many of our tools are actually enabled
+  const enabledCount = TOOLS.filter(t => {
+    const k = endpointKeyFromUri(t.endpoint);
+    const a = BACKEND_STATUS.endpointsAvailability[k];
+    return !a || a.enabled !== false;
+  }).length;
+  const banner = document.getElementById('demoBanner');
+  banner.innerHTML = `<strong>${forced ? 'Connected (paid backend, free tools only)' : 'Connected'}</strong>
+    to <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code> &mdash;
+    license: <code>${BACKEND_STATUS.license}</code> | enabled tools: <strong>${enabledCount}/${TOOLS.length}</strong>
+    <button onclick="location.reload()" class="ml-3 underline font-medium hover:text-green-900">Switch to Demo Mode</button>`;
+  banner.className = 'bg-green-50 border-b border-green-200 px-4 py-2 text-center text-sm text-green-800';
+  router.resolve();
+}
 
 // ==================================
 // INIT
