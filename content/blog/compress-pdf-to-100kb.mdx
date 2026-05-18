@@ -1,0 +1,77 @@
+---
+title: "How to Compress a PDF to 100KB Online"
+description: "Compress a PDF to 100KB online using a free tool. Practical guide for email attachments, form uploads, and storage limits."
+slug: "compress-pdf-to-100kb"
+keyword: "compress pdf to 100kb online"
+tags: ["pdf", "compress", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Compress a PDF to 100KB Online
+
+> **Short answer.** To compress a PDF to 100KB online, open [Compress PDF](/tools/compress-pdf), try **Medium** compression first, check the output size, and step up to **High** only if Medium doesn't reach your target. Most text-heavy documents hit 100KB at Medium; image-heavy files may need pre-processing.
+
+Email systems cap attachments at 5–25 MB, but many web forms demand under 100KB or 200KB. That's the scenario where this guide helps: you have a specific size ceiling and need to hit it without destroying readability.
+
+## What you'll need
+
+- The PDF you need to shrink.
+- A browser.
+- Optional: [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) self-hosted for privacy.
+
+## Step-by-step
+
+1. **Check your current size.** Right-click the file, check properties. Know the gap.
+2. **Open the tool.** Go to [Compress PDF](/tools/compress-pdf).
+3. **Try Medium first.** Upload and compress at Medium. Check the output size.
+4. **Still too large?** Two options: go to High, or pre-process (see below).
+5. **Download** when under your target.
+
+## Pre-processing tricks to reach 100KB
+
+If Medium compression alone doesn't hit 100KB, the file probably has heavy images or embedded fonts:
+
+- **Scanned pages?** Run [OCR PDF](/tools/ocr-pdf) first. OCR often lets the compressor drop image resolution aggressively.
+- **Fillable form?** Run [Flatten PDF](/tools/flatten) to discard the form state.
+- **Annotations?** Run [Remove Annotations](/tools/remove-annotations).
+- **Blank pages?** Run [Remove Blank Pages](/tools/remove-blanks).
+- **Only need certain pages?** [Extract Pages](/tools/extract-pages) before compressing.
+
+Each step removes a source of bloat before the compressor runs, making the final file smaller than compression alone could achieve.
+
+## The tradeoff at High compression
+
+High compression re-encodes images aggressively. For text-only documents you won't notice. For documents with diagrams, photos, or charts, you may see blurriness at zoom. Always open the result at 100% and check before sending.
+
+## Frequently asked questions
+
+### Can I always get a PDF to exactly 100KB?
+
+No. Compression is lossy — there's a floor below which the content is destroyed. If your 50-page scan is 20 MB, getting it to 100KB is unrealistic without removing pages. A realistic target for a 20-page text document is 100–300KB.
+
+### Is compressing a PDF to 100KB online free?
+
+Yes. [Compress PDF](/tools/compress-pdf) is free, no signup, no watermark. Self-hosting removes any practical limits.
+
+### Will the text still be selectable after compression?
+
+Yes. Compression affects image quality, not text layers. If the text was selectable before, it still is after.
+
+### Is it safe to compress sensitive documents online?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it on your machine. For anything confidential, self-host.
+
+### What if I need under 50KB?
+
+At that size, you're looking at a 1–3 page text-only document. Strip everything else, flatten, compress at High. If it's still too large, the content itself is the limit.
+
+## Wrap-up
+
+Compressing a PDF to 100KB online is a combination of removing bloat first and compressing second. Open [Compress PDF](/tools/compress-pdf), try Medium, and pre-process with [Flatten PDF](/tools/flatten) or [OCR PDF](/tools/ocr-pdf) if you need to go smaller.

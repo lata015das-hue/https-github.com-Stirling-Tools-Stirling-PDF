@@ -1,0 +1,75 @@
+---
+title: "How to Extract Specific Pages from a PDF"
+description: "Extract specific pages from a PDF into a new file for free. Pick pages by number or range, download the result, keep the original intact."
+slug: "extract-pages-from-pdf"
+keyword: "extract specific pages from pdf"
+tags: ["pdf", "page-operations", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Extract Specific Pages from a PDF
+
+> **Short answer.** To extract specific pages from a PDF, open [Extract Pages](/tools/extract-pages), enter the page numbers you want (e.g., 1-3, 7, 12), upload the file, and download a new PDF containing only those pages.
+
+You have a 100-page manual but only need the troubleshooting section (pages 85–92). Extracting gives you a new, smaller file with just what you need — without modifying the original.
+
+## What you'll need
+
+- A PDF with pages you want to pull out.
+- The page numbers you need (check in any PDF reader).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Extract Pages](/tools/extract-pages).
+2. **Enter page numbers.** Use commas and dashes: `1, 3, 5-9` extracts pages 1, 3, and 5 through 9.
+3. **Upload.** Drop the PDF.
+4. **Extract.** Click the action button.
+5. **Download.** The new PDF contains only your selected pages.
+
+The original file is untouched. Extraction produces a new file.
+
+## When to extract vs. when to split
+
+- **Extract** when you want specific scattered pages (e.g., 1, 7, 12, 45).
+- **Split** when you want to cut the document into sequential chunks (e.g., pages 1-10, 11-20). Use [Split PDF](/tools/split-pdf) for that.
+
+## Common pitfalls
+
+- **Printed page numbers ≠ PDF page numbers.** A book with a preface might call page 1 what the PDF calls page 5. Always verify in a reader.
+- **Extracted file still large.** The output keeps fonts and metadata from the original. Run [Compress PDF](/tools/compress-pdf) to shrink it.
+- **Need to remove pages instead.** If you want everything *except* pages 5-7, use [Remove Pages](/tools/remove-pages) — it's the inverse operation.
+
+## Frequently asked questions
+
+### Is it free to extract pages from a PDF?
+
+Yes. [Extract Pages](/tools/extract-pages) is free, no signup, no watermark, no page limit when self-hosted.
+
+### Does extracting change the original file?
+
+No. Extraction produces a new file. The original remains untouched.
+
+### Can I extract non-consecutive pages?
+
+Yes. Enter `1, 5, 12, 30-35` to get a mix of individual pages and ranges in one output file.
+
+### Is it safe for confidential documents?
+
+Public tools process your file remotely. Self-hosted Stirling-PDF keeps it local. For sensitive material, self-host.
+
+### How do I merge extracted pages back with another file?
+
+Use [Merge PDFs](/tools/merge-pdf). Upload the extracted pages and the other file, reorder, merge.
+
+## Wrap-up
+
+Extracting pages is the cleanest way to get what you need from a large PDF without touching the original. Open [Extract Pages](/tools/extract-pages), enter your numbers, download the result. Pair with [Merge PDFs](/tools/merge-pdf) to combine extracts from multiple sources.

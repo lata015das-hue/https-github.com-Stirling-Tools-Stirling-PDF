@@ -1,0 +1,87 @@
+---
+title: "Why Is My PDF File So Large? (And How to Fix It)"
+description: "Why is my PDF file so large? Common causes include embedded fonts, high-res images, and form state. Here is how to diagnose and fix each one."
+slug: "why-is-my-pdf-so-large"
+keyword: "why is my pdf file so large"
+tags: ["pdf", "compress", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# Why Is My PDF File So Large? (And How to Fix It)
+
+> **Short answer.** Your PDF is large because it contains one or more of: high-resolution images, embedded fonts, form field state, annotations, or hidden blank pages. Fix it by running [Compress PDF](/tools/compress-pdf) at Low or Medium, after removing the bloat sources below.
+
+A 3-page letter shouldn't be 15 MB. When it is, the cause is almost always something the authoring tool embedded silently — not the text itself. Text is tiny. Everything else is the problem.
+
+## The 5 most common causes
+
+### 1. High-resolution images
+
+A single 300-DPI photo at full page size is 8–25 MB. If your PDF has scanned pages or embedded photos, that's your culprit.
+
+**Fix:** Run [Compress PDF](/tools/compress-pdf) at Medium. For scanned docs, [OCR PDF](/tools/ocr-pdf) first — it lets the compressor drop image resolution without losing the text.
+
+### 2. Embedded fonts (too many)
+
+Every font family used in the document gets embedded in full or as a subset. A document using 6 font families can carry 2–4 MB of font data.
+
+**Fix:** Go back to the source and reduce to 2 font families. If you can't, compression alone won't help much — fonts are already compressed internally.
+
+### 3. Form field state
+
+A filled PDF form keeps both the blank template and all filled data. Two copies of every page, essentially.
+
+**Fix:** [Flatten PDF](/tools/flatten). Flattening burns the form fields into the page content and discards the editable state.
+
+### 4. Annotations and revision history
+
+Comments, highlights, sticky notes, tracked changes — all stored separately from the page content.
+
+**Fix:** [Remove Annotations](/tools/remove-annotations) strips them.
+
+### 5. Blank pages
+
+Some exporters add a trailing blank page. It takes space.
+
+**Fix:** [Remove Blank Pages](/tools/remove-blanks) detects and removes them.
+
+## The diagnosis → fix workflow
+
+1. Check the file size and page count. More than ~200 KB/page for text-heavy content means bloat.
+2. Open in a reader — are there images? scans? forms?
+3. Apply the relevant fix(es) from above.
+4. Run [Compress PDF](/tools/compress-pdf) as the final step.
+5. Compare sizes. Repeat if needed at a higher compression level.
+
+## Frequently asked questions
+
+### Why is my 1-page PDF 10 MB?
+
+Almost certainly a full-page image — either a scan or an embedded photo. Run [Compress PDF](/tools/compress-pdf) at High, or re-export the image at lower resolution before embedding.
+
+### Does compression reduce quality?
+
+At Low and Medium: imperceptible for most documents. At High: yes, images may look slightly softer at full zoom. Text is never affected.
+
+### Will flattening my form make it uneditable?
+
+Yes. That's the point — you're discarding the editable state to save space. Keep the original if you need to edit later.
+
+### Can I undo compression?
+
+No. Compression is a one-way transformation. Always keep a backup of the original before compressing.
+
+### Is there a way to see what's making my PDF large?
+
+Advanced PDF inspection tools (like `pdfinfo`, `qpdf --show-object`) can break down size by stream type. For most users, the 5 causes above cover 95% of cases without needing to inspect internals.
+
+## Wrap-up
+
+A large PDF is usually an image, font, or form problem — not a text problem. Diagnose which one applies, fix it with the targeted tool, then compress. Start with [Compress PDF](/tools/compress-pdf) and add [Flatten PDF](/tools/flatten), [OCR PDF](/tools/ocr-pdf), or [Remove Annotations](/tools/remove-annotations) as needed.

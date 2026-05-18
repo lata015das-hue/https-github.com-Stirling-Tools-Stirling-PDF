@@ -1,0 +1,78 @@
+---
+title: "How to Convert a PDF to an Editable Word Document"
+description: "Convert a PDF to an editable Word document (DOCX) for free. Works on text-based and scanned PDFs with OCR. No signup, self-hostable."
+slug: "pdf-to-editable-word"
+keyword: "convert pdf to editable word document"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert a PDF to an Editable Word Document
+
+> **Short answer.** To convert a PDF to an editable Word document, open [PDF to Word](/tools/pdf-to-word), upload your file, and download the DOCX. For scanned PDFs, run [OCR PDF](/tools/ocr-pdf) first so the text layer exists before conversion.
+
+You received a contract as a PDF and need to edit one clause. Or a colleague sent a report and you want to reuse a table. The conversion preserves text, basic formatting, and tables — you get a DOCX you can open in Word, Google Docs, or LibreOffice.
+
+## What you'll need
+
+- The PDF you want to edit.
+- A browser.
+- Optional: [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) self-hosted for confidential documents.
+
+## Step-by-step
+
+1. **Check if it's a scan.** Open the PDF, try selecting text with your cursor. If you can't select anything, it's a scan — do step 2 first.
+2. **OCR scans.** Run [OCR PDF](/tools/ocr-pdf) to add a text layer. Pick the right language.
+3. **Open the tool.** Go to [PDF to Word](/tools/pdf-to-word).
+4. **Upload.** Drop the PDF (or the OCR'd version from step 2).
+5. **Download.** Open the DOCX in your editor and make your changes.
+
+## What converts well (and what doesn't)
+
+| Converts well | May need manual fixes |
+|---|---|
+| Body text and paragraphs | Complex multi-column layouts |
+| Simple tables | Nested tables or merged cells |
+| Headings and lists | Headers/footers with images |
+| Bold/italic/underline | Exact font matching |
+
+The output is a working document, not a pixel-perfect replica. Expect to spend a few minutes on formatting cleanup for complex PDFs.
+
+## Common pitfalls
+
+- **Scanned PDF → empty DOCX.** You skipped OCR. Run [OCR PDF](/tools/ocr-pdf) first.
+- **Garbled text.** The PDF uses an unusual embedded font. Try [PDF to Text](/tools/pdf-to-text) for a plain-text extraction as a fallback.
+- **Tables misaligned.** Complex tables sometimes split into separate text blocks. Reformat manually in Word.
+
+## Frequently asked questions
+
+### Is it free to convert a PDF to Word?
+
+Yes. [PDF to Word](/tools/pdf-to-word) is free, no signup, no watermark. Self-hosting removes all limits.
+
+### Does it work on scanned documents?
+
+Only after OCR. A scan is just an image — there's no text to convert. Run [OCR PDF](/tools/ocr-pdf) first, then convert.
+
+### Will the formatting be perfect?
+
+No. PDF and DOCX are fundamentally different formats. Text and basic structure carry over; pixel-perfect layout does not. Budget a few minutes for cleanup.
+
+### Is it safe for confidential contracts?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local. For legal documents, self-host.
+
+### Can I convert back to PDF after editing?
+
+Yes. Save from Word as PDF, or use [File to PDF](/tools/file-to-pdf) if you want to use Stirling-PDF for the conversion.
+
+## Wrap-up
+
+Converting a PDF to an editable Word document takes two steps: OCR if it's a scan, then convert. Open [PDF to Word](/tools/pdf-to-word), upload, download, and edit in your preferred word processor.

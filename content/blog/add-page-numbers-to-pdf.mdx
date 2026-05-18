@@ -1,0 +1,73 @@
+---
+title: "How to Add Page Numbers to a PDF"
+description: "Add page numbers to a PDF in seconds using a free, self-hostable tool. Step-by-step walkthrough with no signup and no watermarks required."
+slug: "add-page-numbers-to-pdf"
+keyword: "add page numbers to pdf"
+tags: ["pdf", "page-operations", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Add Page Numbers to a PDF
+
+> **Short answer.** To add page numbers to a PDF, open [Add Page Numbers](/tools/add-page-numbers), upload your file, choose a position (top/bottom, left/center/right), and download the numbered copy. Takes under a minute.
+
+You have a 40-page report ready for printing, and the pages have no numbers. Readers can't reference "see page 12" without them. The fix takes less time than writing this sentence: upload, pick a corner, done.
+
+## What you'll need
+
+- A PDF file you have the right to modify.
+- A browser (any modern one).
+- Optional: a self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) instance for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Add Page Numbers](/tools/add-page-numbers).
+2. **Upload.** Drop your PDF into the upload area.
+3. **Choose position.** Bottom-center is the most common for documents. Top-right works for manuals.
+4. **Run.** Click the action button.
+5. **Download.** The numbered PDF downloads automatically.
+
+If your document already has a cover page that shouldn't be numbered, use [Remove Pages](/tools/remove-pages) to strip it first, number the rest, then [Merge PDFs](/tools/merge-pdf) to reattach the cover.
+
+## Why add page numbers to a PDF after the fact
+
+Most PDF exports from presentation software or web-to-PDF converters skip page numbers. Adding them after export is cleaner than going back to the source document — especially when the source no longer exists or was authored by someone else.
+
+## Common pitfalls
+
+- **Cover page gets numbered.** Solution: split the cover off, number the body, merge them back.
+- **Numbers overlap existing footer.** Use top-right positioning instead of bottom-center.
+- **Wrong starting number.** If the tool supports a start-offset, use it. Otherwise, [Extract Pages](/tools/extract-pages) the section you need numbered, number it starting from 1, then merge.
+
+## Frequently asked questions
+
+### Is it free to add page numbers to a PDF?
+
+Yes. The [Add Page Numbers](/tools/add-page-numbers) tool is part of the free tier. No signup, no watermark, no page limit when you self-host.
+
+### Can I choose where the numbers appear?
+
+Yes. Common options: top-left, top-center, top-right, bottom-left, bottom-center, bottom-right. The tool lets you pick.
+
+### Does it work on scanned PDFs?
+
+Yes. Page numbers are added as a new layer on top of each page. The content underneath — whether text or image — doesn't matter.
+
+### Is my file safe?
+
+Public SaaS tools see your file. Self-hosted Stirling-PDF keeps it on your infrastructure. For sensitive documents, self-host.
+
+### Can I start numbering from a specific page?
+
+If you need pages 1–3 unnumbered and 4+ numbered, split with [Extract Pages](/tools/extract-pages), number the second half, then [Merge PDFs](/tools/merge-pdf).
+
+## Wrap-up
+
+Adding page numbers to a PDF is a 30-second task. Open [Add Page Numbers](/tools/add-page-numbers), upload, pick a position, download. For more control, combine with [Extract Pages](/tools/extract-pages) and [Merge PDFs](/tools/merge-pdf).

@@ -1,0 +1,79 @@
+---
+title: "How to Add a Digital Signature to a PDF"
+description: "Add a digital signature to a PDF using a free certificate-signing tool. Step-by-step guide for legally binding e-signatures on any platform."
+slug: "digital-signature-pdf"
+keyword: "add digital signature to pdf"
+tags: ["pdf", "security", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Add a Digital Signature to a PDF
+
+> **Short answer.** To add a digital signature to a PDF, open [Certificate Sign](/tools/cert-sign), upload your PDF and your signing certificate (.p12 or .pfx), and download the signed copy. The signature is cryptographically verifiable by anyone with a PDF reader.
+
+A digital signature isn't a scanned image of your handwriting — it's a cryptographic proof that the document hasn't been altered since you signed it. Courts, governments, and enterprise workflows increasingly require them.
+
+## What you'll need
+
+- The PDF you want to sign.
+- A digital certificate file (.p12 or .pfx) with its password. You get these from a Certificate Authority or your IT department.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for handling certificates securely.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Certificate Sign](/tools/cert-sign).
+2. **Upload the PDF.** Drop it into the upload area.
+3. **Upload your certificate.** Select the .p12 or .pfx file. Enter the certificate password when prompted.
+4. **Sign.** Click the sign button.
+5. **Download.** The signed PDF downloads. Open it in Adobe Reader or any PDF reader — you'll see a blue ribbon indicating a valid signature.
+
+## Digital signature vs. electronic signature
+
+| Digital signature | Electronic signature |
+|---|---|
+| Cryptographic proof using a certificate | Any mark indicating consent (typed name, image) |
+| Tamper-evident — any change invalidates it | No tamper detection |
+| Legally binding in most jurisdictions (eIDAS, ESIGN Act) | Legal weight varies by jurisdiction |
+| Requires a certificate from a CA | No certificate needed |
+
+This guide covers digital signatures. If you just want to stamp an image of your handwriting, use [Add Stamp](/tools/add-stamp) instead.
+
+## Common pitfalls
+
+- **Certificate expired.** Check validity before signing. An expired certificate produces an invalid signature.
+- **Self-signed certificate.** Readers will show a warning. For legally binding use, get a certificate from a recognized CA.
+- **Signing after modifying.** Sign last. Any edit after signing invalidates the signature. Even adding a watermark breaks it.
+
+## Frequently asked questions
+
+### Is it free to add a digital signature to a PDF?
+
+Yes. [Certificate Sign](/tools/cert-sign) is free. You bring your own certificate — the tool just applies it.
+
+### Where do I get a certificate?
+
+From a Certificate Authority (e.g., GlobalSign, DigiCert, Let's Encrypt for S/MIME). Your company IT may also issue internal certificates.
+
+### Can I verify someone else's signature?
+
+Yes. Use [Validate Signature](/tools/validate-signature) to check if a signed PDF's signature is intact and the certificate is trusted.
+
+### Is my certificate safe with this tool?
+
+Public tools see your certificate and its password — avoid them. Self-hosted Stirling-PDF keeps everything on your machine. For production signing, always self-host.
+
+### Does the signature survive printing?
+
+The cryptographic signature is embedded in the PDF data, not the visual appearance. A printed copy is not digitally signed. The recipient must verify the digital file, not a printout.
+
+## Wrap-up
+
+Adding a digital signature to a PDF requires a certificate and one upload. Open [Certificate Sign](/tools/cert-sign), provide your .p12 and the PDF, download the signed result. Verify with [Validate Signature](/tools/validate-signature) if you receive a signed document from someone else.

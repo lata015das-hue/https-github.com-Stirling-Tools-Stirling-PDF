@@ -1,0 +1,75 @@
+---
+title: "How to Split a PDF into Separate Pages"
+description: "Split a PDF into separate pages or custom ranges for free. No signup, works on any browser, keeps your files private when self-hosted."
+slug: "split-pdf-into-separate-pages"
+keyword: "split a pdf into separate pages"
+tags: ["pdf", "page-operations", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Split a PDF into Separate Pages
+
+> **Short answer.** To split a PDF into separate pages, open [Split PDF](/tools/split-pdf), upload your file, specify page ranges (e.g., 1-3, 4-7, 8), and download each split as its own file.
+
+A 50-page document lands in your inbox, but you only need pages 12–15 for the meeting. Or you want to send chapter 3 without the rest of the book. Splitting is the answer.
+
+## What you'll need
+
+- A PDF with more than one page.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Split PDF](/tools/split-pdf).
+2. **Upload.** Drop the PDF into the upload area.
+3. **Define ranges.** Enter page numbers or ranges: `1-5, 6-10, 11` splits into three files.
+4. **Split.** Click the action button.
+5. **Download.** Each range downloads as a separate PDF.
+
+For a simpler case — you just want to remove 3 pages from the middle — use [Remove Pages](/tools/remove-pages) instead.
+
+## Common splitting patterns
+
+- **Every page as its own file:** enter `1, 2, 3, 4, ...` or look for a "split all" option.
+- **By chapter:** if you know chapter boundaries, enter the ranges manually.
+- **First and last:** `1-5, 46-50` gives you intro and conclusion without the middle.
+
+## Common pitfalls
+
+- **Wrong page numbers.** PDF page numbers and printed page numbers aren't always the same. Check with a PDF reader first.
+- **Output is huge.** Each split file keeps the metadata and fonts from the original. Run [Compress PDF](/tools/compress-pdf) on each if size matters.
+- **Bookmarks lost.** Splitting doesn't carry bookmarks to the child files. Use [Edit Table of Contents](/tools/edit-table-of-contents) on the splits if needed.
+
+## Frequently asked questions
+
+### Is it free to split a PDF?
+
+Yes. [Split PDF](/tools/split-pdf) is free, no signup, no watermark, no page limit when self-hosted.
+
+### Can I split by file size instead of page numbers?
+
+Not directly. Split by estimated page count instead. A rough rule: if the original is 10 MB / 50 pages, each page is ~200 KB. Split into groups that fit your size target, then verify.
+
+### Does splitting change the content?
+
+No. Each output file contains exactly the pages you specified, unchanged. No re-encoding, no quality loss.
+
+### Is it safe for sensitive documents?
+
+Public tools process your file on their servers. Self-hosted Stirling-PDF keeps it on yours. For sensitive content, self-host.
+
+### How do I rejoin split files later?
+
+Use [Merge PDFs](/tools/merge-pdf). Upload the splits in order, merge, done.
+
+## Wrap-up
+
+Splitting a PDF is a 30-second task. Open [Split PDF](/tools/split-pdf), specify your ranges, download the pieces. To put them back together, use [Merge PDFs](/tools/merge-pdf).
