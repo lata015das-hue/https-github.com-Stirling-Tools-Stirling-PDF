@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["jpg-to-pdf", "pdf-to-word", "pdf-to-presentation", "pdf-to-text"]}
     />
   );
 }

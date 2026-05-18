@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["extract-images", "flatten", "update-metadata", "remove-blanks"]}
       lang="ar"
       dir="rtl"
     />

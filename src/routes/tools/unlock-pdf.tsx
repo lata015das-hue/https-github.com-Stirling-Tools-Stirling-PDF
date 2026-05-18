@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["add-password", "change-permissions", "add-watermark-pdf", "cert-sign"]}
     />
   );
 }

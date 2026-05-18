@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["compress-pdf", "repair", "extract-image-scans", "scanner-effect"]}
       lang="ar"
       dir="rtl"
     />

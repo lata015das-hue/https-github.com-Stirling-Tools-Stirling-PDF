@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["ocr-pdf", "extract-images", "flatten", "update-metadata"]}
       lang="ar"
       dir="rtl"
     />

@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["add-password", "unlock-pdf", "change-permissions", "cert-sign"]}
       lang="ar"
       dir="rtl"
     />

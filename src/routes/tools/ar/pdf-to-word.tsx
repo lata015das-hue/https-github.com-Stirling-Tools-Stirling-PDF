@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["pdf-to-jpg", "jpg-to-pdf", "pdf-to-presentation", "pdf-to-text"]}
       lang="ar"
       dir="rtl"
     />

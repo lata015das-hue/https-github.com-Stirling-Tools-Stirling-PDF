@@ -19,6 +19,7 @@ export default function Page() {
       toolId={meta.toolId}
       category={meta.category}
       appUrl={meta.appUrl}
+      relatedTools={["split-pdf", "remove-pages", "rotate-pdf", "rearrange-pages"]}
       lang="ar"
       dir="rtl"
     />

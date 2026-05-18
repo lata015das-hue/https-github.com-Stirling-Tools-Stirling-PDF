@@ -6,7 +6,8 @@
   "scripts": {
     "build:css": "tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --minify",
     "watch:css": "tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --watch",
-    "build": "npm run build:css",
+    "build:pages": "node scripts/build-pages.js",
+    "build": "npm run build:css && npm run build:pages",
     "lighthouse": "npm run build:css && npx -y @lhci/cli@0.13.x autorun"
   },
   "devDependencies": {
