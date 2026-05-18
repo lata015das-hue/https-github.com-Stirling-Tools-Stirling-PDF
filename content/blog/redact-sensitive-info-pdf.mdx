@@ -1,0 +1,76 @@
+---
+title: "How to Redact Sensitive Information in a PDF"
+description: "Redact sensitive information in a PDF permanently. Remove names, addresses, SSNs, and confidential data so they cannot be recovered."
+slug: "redact-sensitive-info-pdf"
+keyword: "redact sensitive information in pdf"
+tags: ["pdf", "security", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Redact Sensitive Information in a PDF
+
+> **Short answer.** To redact sensitive information in a PDF, open [Auto Redact](/tools/auto-redact), upload the file, and the tool detects and removes PII (names, emails, phone numbers, SSNs). The redacted text is permanently gone — not just hidden, deleted from the file data.
+
+Redaction isn't the same as drawing a black box over text. A black box in a PDF editor can often be removed — the text underneath is still there. True redaction *deletes* the underlying data, making recovery impossible.
+
+## What you'll need
+
+- A PDF containing sensitive information.
+- A browser.
+- Strongly recommended: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) — you're handling PII, so keep it local.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Auto Redact](/tools/auto-redact).
+2. **Upload.** Drop the PDF with sensitive content.
+3. **Run.** The tool scans for common PII patterns (emails, phone numbers, names, addresses, IDs).
+4. **Review.** Check the output — confirm the right things were redacted and nothing important was caught by mistake.
+5. **Download.** The redacted content is permanently removed from the file.
+
+## Redaction vs. other approaches
+
+| Approach | Data permanently removed? | Safe for FOIA / legal? |
+|---|---|---|
+| Auto Redact (this tool) | Yes | Yes |
+| Black box in Adobe Acrobat (without "Apply Redactions") | No — text is still selectable | No |
+| Screenshot and re-export | Sort of — but loses quality and metadata | Weak |
+| Crop the area | No — cropped data may be recoverable | No |
+
+## Common pitfalls
+
+- **Only visual redaction.** If you use a drawing tool to add a black rectangle, the text is still in the PDF data. Anyone can remove the rectangle. Use proper redaction.
+- **Metadata not redacted.** Author name, creation date, editing history may still be in the file properties. Run [Update Metadata](/tools/update-metadata) to clean those separately.
+- **OCR layer missed.** If the PDF is a scan with an OCR layer, the visual black box covers the image but the OCR text may remain. True redaction handles both.
+
+## Frequently asked questions
+
+### Is auto-redaction free?
+
+Yes. [Auto Redact](/tools/auto-redact) is free, no signup. Self-hosting is strongly recommended for documents containing real PII.
+
+### What types of PII does it detect?
+
+Email addresses, phone numbers, Social Security numbers (and similar national IDs), dates of birth, and common name patterns. Detection is pattern-based — always review the output.
+
+### Can redacted text be recovered?
+
+No. True redaction deletes the text from the PDF data stream. It's not hidden or encrypted — it's gone.
+
+### Is it safe to use online for confidential documents?
+
+Public tools see your unredacted file. Self-host Stirling-PDF for any document containing real sensitive data. The tool is open source specifically so you can run it on your own infrastructure.
+
+### Should I redact before or after signing?
+
+Redact first, then sign. [Certificate Sign](/tools/cert-sign) locks the document state — any change after signing (including redaction) invalidates the signature.
+
+## Wrap-up
+
+Redacting sensitive information in a PDF is a one-tool operation when done correctly. Open [Auto Redact](/tools/auto-redact), upload, review, download. For metadata cleanup, follow up with [Update Metadata](/tools/update-metadata). Self-host for anything containing real PII.

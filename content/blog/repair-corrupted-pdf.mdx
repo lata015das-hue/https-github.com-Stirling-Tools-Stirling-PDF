@@ -1,0 +1,85 @@
+---
+title: "How to Repair a Corrupted PDF File"
+description: "Repair a corrupted or damaged PDF file for free. Fix files that won't open, display errors, or have missing pages using an automated repair tool."
+slug: "repair-corrupted-pdf"
+keyword: "repair corrupted pdf"
+tags: ["pdf", "advance", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Repair a Corrupted PDF File
+
+> **Short answer.** To repair a corrupted PDF, open [Repair PDF](/tools/repair), upload the damaged file, and download the fixed version. The tool rebuilds the PDF's internal structure, recovering whatever content is salvageable.
+
+A PDF is "corrupted" when its internal structure (the cross-reference table, object streams, or page tree) is damaged. This happens from incomplete downloads, disk errors, bad email attachments, or software crashes during save. The content may still be intact — it just needs the structure rebuilt around it.
+
+## What you'll need
+
+- The corrupted PDF file (the one that won't open or displays errors).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Repair PDF](/tools/repair).
+2. **Upload.** Drop the damaged file. Even if it won't open in a reader, it can usually be uploaded.
+3. **Repair.** The tool attempts to rebuild the internal structure.
+4. **Download.** Open the repaired file in a PDF reader. Check for missing pages or content.
+
+## What repair can fix (and what it can't)
+
+| Can fix | Cannot fix |
+|---|---|
+| Corrupted cross-reference table | File is 0 bytes (nothing to recover) |
+| Truncated file (incomplete download) | Encrypted file with lost password |
+| Damaged page tree | Content that was never in the file |
+| Invalid object references | Severely overwritten disk sectors |
+| Linearization errors | DRM-locked files from another vendor |
+
+Repair works on structural damage. If the actual content bytes are destroyed (not just misreferenced), those bytes are gone.
+
+## Common pitfalls
+
+- **File is zero-size.** Nothing to repair. Re-download or recover from backup.
+- **"Repaired" but pages are blank.** The page images were the corrupted part. The structure is fixed but the content was lost.
+- **Still won't open after repair.** The damage is too severe. Try an alternative tool (mutool, qpdf) or recover from backup.
+
+## Prevention tips
+
+- Don't rename .pdf files while they're open in a reader.
+- Always "Save As" (not overwrite) when editing PDFs.
+- Download PDFs fully before opening — don't open from a stream.
+- Keep backups of important documents.
+
+## Frequently asked questions
+
+### Is it free to repair a PDF?
+
+Yes. [Repair PDF](/tools/repair) is free, no signup.
+
+### Will all content be recovered?
+
+Not always. Repair recovers whatever the internal structure allows. If content bytes are destroyed, they're lost. But in most cases (truncated downloads, bad saves), everything is recoverable.
+
+### Does repair change the content?
+
+No. It rebuilds the structure around existing content. Text, images, and formatting are preserved — only the internal bookkeeping is fixed.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local. For confidential documents, self-host.
+
+### What about password-protected corrupted files?
+
+If the file is both corrupted and encrypted, repair may not work — the encryption layer prevents reading the content. Try [Remove Password](/tools/unlock-pdf) first (if you know the password), then repair.
+
+## Wrap-up
+
+A corrupted PDF isn't necessarily lost. Open [Repair PDF](/tools/repair), upload the damaged file, and download the rebuilt version. For prevention: always save fully, don't interrupt downloads, and keep backups.

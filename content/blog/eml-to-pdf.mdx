@@ -1,0 +1,74 @@
+---
+title: "How to Convert Email (EML) to PDF"
+description: "Convert email EML files to PDF for archiving, legal discovery, or sharing. Preserves headers, body, and attachments in one printable document."
+slug: "eml-to-pdf"
+keyword: "convert email eml to pdf"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert Email (EML) to PDF
+
+> **Short answer.** To convert an email EML file to PDF, open [Email to PDF](/tools/eml-to-pdf), upload the .eml file, and download the rendered PDF. Headers (From, To, Date, Subject) plus the email body are preserved in a clean, printable layout.
+
+EML files are the universal email export format — every email client can produce them. But sharing or archiving them requires a reader that understands the format. Converting to PDF makes the email universally readable, printable, and tamper-evident when paired with a signature.
+
+## What you'll need
+
+- An .eml file (exported from Outlook, Thunderbird, Apple Mail, or Gmail via "Show Original" → save).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for confidential correspondence.
+
+## Step-by-step
+
+1. **Export the email.** In most clients: File → Save As → .eml. In Gmail: three dots → "Show original" → "Download original."
+2. **Open the tool.** Go to [Email to PDF](/tools/eml-to-pdf).
+3. **Upload.** Drop the .eml file.
+4. **Convert.** Click the action button.
+5. **Download.** The PDF contains headers + body in a clean layout.
+
+## Use cases
+
+- **Legal discovery.** Courts accept PDF more readily than EML. Convert and [Certificate Sign](/tools/cert-sign) for authenticity.
+- **HR records.** Archive employee correspondence as searchable PDFs.
+- **Client communication.** Share email threads with clients who don't have your email client.
+- **Personal archive.** Back up important emails in a format that will be readable in 20 years.
+
+## Common pitfalls
+
+- **Attachments not embedded.** The PDF renders the email body; binary attachments (images, documents) may not be included. Save attachments separately.
+- **HTML emails render differently.** Complex HTML newsletters may look different in PDF than in your email client. The conversion does its best but isn't pixel-perfect.
+- **Character encoding issues.** Non-Latin emails (Arabic, Chinese) need the .eml to have correct charset headers. If text looks garbled, check the source encoding.
+
+## Frequently asked questions
+
+### Is it free to convert EML to PDF?
+
+Yes. [Email to PDF](/tools/eml-to-pdf) is free, no signup, no watermark.
+
+### Does it preserve the email headers?
+
+Yes. From, To, CC, Date, and Subject are rendered at the top of the PDF.
+
+### Can I convert multiple emails into one PDF?
+
+Convert each .eml separately, then [Merge PDFs](/tools/merge-pdf) the results into one document.
+
+### Is it safe for confidential emails?
+
+Public tools see your email content. Self-hosted Stirling-PDF keeps it on your machine. For legal or HR emails, always self-host.
+
+### Can I make the PDF searchable?
+
+If the email is text-based (not a scanned image), the PDF is already searchable. For image-based content within emails, run [OCR PDF](/tools/ocr-pdf) on the output.
+
+## Wrap-up
+
+Converting EML to PDF gives you a universal, archivable, printable record of any email. Open [Email to PDF](/tools/eml-to-pdf), upload the .eml, download the PDF. For legal use, follow up with [Certificate Sign](/tools/cert-sign).

@@ -1,0 +1,78 @@
+---
+title: "How to Convert Markdown to PDF with Images"
+description: "Convert Markdown to PDF with images, code blocks, and formatting preserved. Free tool for developers, writers, and documentation teams."
+slug: "markdown-to-pdf-with-images"
+keyword: "convert markdown to pdf with images"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert Markdown to PDF with Images
+
+> **Short answer.** To convert Markdown to PDF with images, open [Markdown to PDF](/tools/markdown-to-pdf), upload your .md file, and download the rendered PDF. Images referenced in the Markdown (local paths or URLs) are embedded in the output.
+
+Markdown is the writing format of choice for developers, technical writers, and documentation teams. But when you need to share with someone who doesn't have a Markdown reader — a client, a printer, a regulatory body — PDF is the universal format.
+
+## What you'll need
+
+- A .md file with your content (text, headings, code blocks, image references).
+- Images referenced in the file should be accessible (local paths relative to the .md, or URLs).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Check image paths.** Ensure `![alt](path)` references point to accessible images. Relative paths should be relative to the .md file.
+2. **Open the tool.** Go to [Markdown to PDF](/tools/markdown-to-pdf).
+3. **Upload.** Drop the .md file (and any referenced local images if the tool supports multi-file upload).
+4. **Convert.** The renderer processes Markdown + images into a styled PDF.
+5. **Download.** The PDF has headings, code blocks, lists, and images rendered properly.
+
+## What renders well
+
+- Headings (H1–H6) → PDF headings with hierarchy
+- Fenced code blocks with syntax highlighting
+- Inline code
+- Images (local and URL-referenced)
+- Tables (GitHub-flavored Markdown)
+- Bold, italic, links
+- Ordered and unordered lists
+
+## Common pitfalls
+
+- **Images missing in output.** The image path in the Markdown is relative but the tool can't access the file. Use absolute URLs or upload images alongside the .md.
+- **Code blocks overflow.** Long lines in code blocks may be clipped. Break long lines before converting.
+- **Styling is plain.** The default PDF output uses a simple stylesheet. For branded output, convert to HTML first ([HTML to PDF](/tools/html-to-pdf)) with your own CSS.
+
+## Frequently asked questions
+
+### Is it free to convert Markdown to PDF?
+
+Yes. [Markdown to PDF](/tools/markdown-to-pdf) is free, no signup.
+
+### Does it support GitHub-flavored Markdown?
+
+Yes. Tables, task lists, and fenced code blocks with language hints are supported.
+
+### Can I include a table of contents?
+
+If the tool supports it, a TOC is generated from headings. Otherwise, add one manually in the Markdown.
+
+### Is my file safe?
+
+Public tools see your content. Self-hosted Stirling-PDF keeps it local.
+
+### What about LaTeX math?
+
+Basic LaTeX math rendering depends on the tool's renderer. If math doesn't render, export from a dedicated tool (Pandoc + LaTeX) instead.
+
+## Wrap-up
+
+Converting Markdown to PDF with images is the last step in a documentation workflow. Open [Markdown to PDF](/tools/markdown-to-pdf), upload your .md, download the formatted PDF. For custom styling, convert to HTML first and use [HTML to PDF](/tools/html-to-pdf).

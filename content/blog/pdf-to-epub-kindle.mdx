@@ -1,0 +1,77 @@
+---
+title: "How to Convert a PDF to EPUB for Kindle"
+description: "Convert a PDF to EPUB for Kindle or any e-reader. Get reflowable text that adapts to screen size instead of fixed-layout PDF pages."
+slug: "pdf-to-epub-kindle"
+keyword: "convert pdf to epub for kindle"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert a PDF to EPUB for Kindle
+
+> **Short answer.** To convert a PDF to EPUB for Kindle, open [PDF to EPUB](/tools/pdf-to-epub), upload the PDF, and download the EPUB. Transfer it to your Kindle via USB or email. The text reflows to fit any screen size — no more zooming and panning.
+
+PDFs are designed for print — fixed pages, fixed fonts, fixed layout. E-readers are designed for reading — reflowable text that adapts to screen size and user preferences. Converting bridges the gap.
+
+## What you'll need
+
+- A text-based PDF (not a scan — if it's a scan, run [OCR PDF](/tools/ocr-pdf) first).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Check the PDF.** Is text selectable? If yes, proceed. If no (scan), run [OCR PDF](/tools/ocr-pdf) first.
+2. **Open the tool.** Go to [PDF to EPUB](/tools/pdf-to-epub).
+3. **Upload.** Drop the PDF.
+4. **Convert.** Click the action button.
+5. **Download.** Transfer the .epub to your Kindle via USB, or email it to your @kindle.com address.
+
+## What converts well (and what doesn't)
+
+| Converts well | Doesn't convert well |
+|---|---|
+| Continuous text (novels, articles) | Multi-column academic papers |
+| Simple headings and paragraphs | Complex tables and charts |
+| Books with linear flow | Design-heavy magazines |
+
+The simpler the PDF layout, the better the EPUB. Complex layouts may need manual cleanup in Calibre after conversion.
+
+## Common pitfalls
+
+- **Scanned PDF → empty EPUB.** You skipped OCR. Run [OCR PDF](/tools/ocr-pdf) first.
+- **Weird line breaks.** PDF text extraction sometimes adds line breaks mid-sentence. The EPUB reader may show these as hard returns. Manual cleanup or a tool like Calibre can fix it.
+- **Images lost.** Complex image-text layouts may not transfer images correctly. For image-heavy PDFs, reading the original PDF on the Kindle app may be better than converting.
+
+## Frequently asked questions
+
+### Is it free to convert PDF to EPUB?
+
+Yes. [PDF to EPUB](/tools/pdf-to-epub) is free, no signup.
+
+### Does it work with Kindle?
+
+Yes. Modern Kindles read EPUB directly. Older Kindles need MOBI — use Calibre to convert EPUB → MOBI, or email the EPUB to your @kindle.com address (Amazon auto-converts).
+
+### Will formatting be perfect?
+
+No. PDF and EPUB have fundamentally different layout models. Expect readable text with basic formatting; don't expect pixel-perfect reproduction.
+
+### Is my file safe?
+
+Public tools see your PDF. Self-hosted Stirling-PDF keeps it local.
+
+### What about DRM-protected PDFs?
+
+DRM-protected PDFs cannot be converted. You need to own the content or have explicit permission.
+
+## Wrap-up
+
+Converting a PDF to EPUB for Kindle gives you reflowable text on any e-reader. Open [PDF to EPUB](/tools/pdf-to-epub), upload, download. For scanned content, run [OCR PDF](/tools/ocr-pdf) first. For complex layouts, expect some manual cleanup.

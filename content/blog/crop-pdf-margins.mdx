@@ -1,0 +1,74 @@
+---
+title: "How to Crop Margins from PDF Pages"
+description: "Crop margins from PDF pages to remove extra whitespace, fix printing issues, or resize content for screen reading. Free and self-hostable."
+slug: "crop-pdf-margins"
+keyword: "crop margins from pdf pages"
+tags: ["pdf", "page-operations", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Crop Margins from PDF Pages
+
+> **Short answer.** To crop margins from PDF pages, open [Crop PDF](/tools/crop), upload the file, define the crop area (or let the tool auto-detect whitespace), and download the trimmed result. Content outside the crop box is removed.
+
+Academic papers have 1-inch margins on all sides — great for printing, terrible for reading on a tablet. Crop those margins and the text fills the screen. Same fix for scanned documents with uneven borders or presentations exported with too much whitespace.
+
+## What you'll need
+
+- A PDF with margins you want to remove.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Crop PDF](/tools/crop).
+2. **Upload.** Drop the PDF.
+3. **Define crop area.** Set the margins to trim (top, bottom, left, right) or use auto-detect if available.
+4. **Crop.** Click the action button.
+5. **Download.** The output has tighter margins.
+
+## When to crop
+
+- **Reading on tablets/phones.** Remove margins to maximize readable area.
+- **Printing booklets.** Before using [Booklet Imposition](/tools/booklet-imposition), crop excess margins so content isn't tiny.
+- **Cleaning scanned pages.** Scanners often capture a black border or uneven edges.
+- **Standardizing page sizes.** Different source documents have different margins. Crop to a uniform size before [Merge PDFs](/tools/merge-pdf).
+
+## Common pitfalls
+
+- **Content gets cut off.** You cropped too aggressively. Undo (use the original) and set smaller crop values.
+- **Different pages have different margins.** The tool applies the same crop to all pages. If your document has mixed layouts, [Extract Pages](/tools/extract-pages), crop each group separately, then merge.
+- **Cropping doesn't reduce file size.** The cropped data may still be in the file (just hidden). Run [Compress PDF](/tools/compress-pdf) afterward to actually reduce size.
+
+## Frequently asked questions
+
+### Is it free to crop a PDF?
+
+Yes. [Crop PDF](/tools/crop) is free, no signup, no watermark.
+
+### Does cropping permanently remove content?
+
+The content outside the crop box becomes invisible and inaccessible to readers. Some PDF internals may retain it until you compress or re-render. For sensitive content, use [Auto Redact](/tools/auto-redact) instead of relying on cropping.
+
+### Can I crop only specific pages?
+
+Not directly. Workaround: [Extract Pages](/tools/extract-pages) the ones you want to crop, crop them, [Merge PDFs](/tools/merge-pdf) back.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### Can I undo a crop?
+
+Not from the cropped file. Keep the original before cropping.
+
+## Wrap-up
+
+Cropping PDF margins is a quick fix for oversized whitespace. Open [Crop PDF](/tools/crop), set your margins, download the tighter result. Pair with [Compress PDF](/tools/compress-pdf) to actually reduce file size, or [Booklet Imposition](/tools/booklet-imposition) for print-ready output.

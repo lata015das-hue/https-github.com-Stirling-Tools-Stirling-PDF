@@ -1,0 +1,75 @@
+---
+title: "How to Flatten PDF Form Fields"
+description: "Flatten PDF form fields to lock filled data into the page permanently. Reduces file size, prevents further editing, and ensures consistent display."
+slug: "flatten-pdf-form-fields"
+keyword: "flatten pdf form fields"
+tags: ["pdf", "other", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Flatten PDF Form Fields
+
+> **Short answer.** To flatten PDF form fields, open [Flatten PDF](/tools/flatten), upload the filled form, and download the flattened copy. The form data becomes permanent page content — no longer editable, smaller file size, displays identically on every device.
+
+A fillable PDF form keeps two layers: the template and the filled data. That's convenient for editing, but it doubles the file size and can display differently across readers. Flattening merges both layers into one — the form looks exactly the same, but it's now a static document.
+
+## What you'll need
+
+- A filled PDF form you're done editing.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Verify the form is complete.** Once flattened, you can't edit it.
+2. **Open the tool.** Go to [Flatten PDF](/tools/flatten).
+3. **Upload.** Drop the filled form.
+4. **Flatten.** Click the action button.
+5. **Download.** The output is a static PDF — same appearance, no editable fields.
+
+## Why flatten
+
+- **Consistent display.** Some PDF readers render form fields differently. Flattened documents look identical everywhere.
+- **Smaller file.** Form state adds 30–100% overhead. Flattening removes it.
+- **Prevent modification.** Recipients can't change values after flattening.
+- **Before merging.** [Merge PDFs](/tools/merge-pdf) works cleaner when forms are flattened first — no conflicting field names.
+- **Before compression.** [Compress PDF](/tools/compress-pdf) is more effective on flattened files.
+
+## Common pitfalls
+
+- **Flattened too early.** You still needed to edit a field. Keep the original unfiled copy as backup.
+- **Digital signatures invalidated.** Flattening modifies the PDF structure. If the form was signed, the signature breaks. Flatten before signing, not after.
+- **Hidden fields lost.** Some forms have hidden fields (e.g., calculation fields). Flattening makes their values permanent but hides the logic.
+
+## Frequently asked questions
+
+### Is it free to flatten a PDF?
+
+Yes. [Flatten PDF](/tools/flatten) is free, no signup, no watermark.
+
+### Can I unflatten a PDF?
+
+No. Flattening is permanent. Keep the original editable version if you might need to make changes later.
+
+### Does flattening reduce file size?
+
+Yes, typically 30–50% for forms with many fields. The form field metadata is discarded.
+
+### Is it safe for tax forms or legal documents?
+
+Yes — flattening preserves the visual content exactly. For legal submission, flatten to prevent tampering, then optionally [Certificate Sign](/tools/cert-sign) the result.
+
+### What about annotations?
+
+Flattening also burns annotations (comments, highlights) into the page. If you only want to remove annotations without flattening forms, use [Remove Annotations](/tools/remove-annotations) instead.
+
+## Wrap-up
+
+Flatten when you're done editing and want a permanent, compact, universally consistent document. Open [Flatten PDF](/tools/flatten), upload, download. Pair with [Compress PDF](/tools/compress-pdf) for maximum size reduction.

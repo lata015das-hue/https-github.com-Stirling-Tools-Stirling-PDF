@@ -1,0 +1,73 @@
+---
+title: "How to Convert HTML to PDF"
+description: "Convert HTML files to PDF for free. Preserve styling, links, and layout from any web page or local HTML file into a printable PDF document."
+slug: "convert-html-to-pdf"
+keyword: "convert html to pdf"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert HTML to PDF
+
+> **Short answer.** To convert HTML to PDF, open [HTML to PDF](/tools/html-to-pdf), upload your .html file, and download the rendered PDF. CSS styling, images, and basic layout are preserved in the output.
+
+You built a web-based invoice, a report dashboard, or a documentation page in HTML. Now you need it as a PDF for a client who wants to print it or archive it. The conversion renders the HTML just like a browser would — then saves it as a PDF.
+
+## What you'll need
+
+- An .html file (self-contained, or with CSS/images referenced via URLs).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [HTML to PDF](/tools/html-to-pdf).
+2. **Upload.** Drop the .html file. If it references external CSS or images via relative paths, they need to be accessible (or inline them first).
+3. **Convert.** The tool renders the HTML and produces a PDF.
+4. **Download.** Open and verify the layout matches your expectations.
+
+## Tips for a clean conversion
+
+- **Inline your CSS.** External stylesheets referenced via relative paths may not load. Inline them with a `<style>` block.
+- **Use absolute image URLs.** Or embed images as base64 data URIs.
+- **Set page size via CSS.** Add `@page { size: A4; margin: 1cm; }` to control paper size.
+- **Use print-friendly CSS.** Add `@media print { ... }` rules to hide navigation, show link URLs, and control page breaks.
+
+## Common pitfalls
+
+- **Broken layout.** External resources (fonts, CSS, images) aren't loading. Inline everything or use absolute URLs.
+- **JavaScript-rendered content missing.** The converter may not execute JS. Pre-render your content server-side.
+- **Page breaks in wrong places.** Use `page-break-before: always;` or `break-before: page;` in CSS to control where pages split.
+
+## Frequently asked questions
+
+### Is it free to convert HTML to PDF?
+
+Yes. [HTML to PDF](/tools/html-to-pdf) is free, no signup, no watermark.
+
+### Does it execute JavaScript?
+
+Depends on the backend renderer. Some support basic JS; others render static HTML only. For JS-heavy pages, use a headless browser (Puppeteer) locally.
+
+### Can I convert a live URL instead of a file?
+
+This tool takes .html file uploads. For URL-to-PDF, save the page locally first (Ctrl+S → complete page), then upload the .html.
+
+### Is my HTML safe?
+
+Public tools see your HTML content. Self-hosted Stirling-PDF keeps it local.
+
+### Can I convert back from PDF to HTML?
+
+Yes. Use [PDF to HTML](/tools/pdf-to-html) — but expect imperfect results. PDF-to-HTML is fundamentally harder than HTML-to-PDF.
+
+## Wrap-up
+
+Converting HTML to PDF preserves your styled content in a universal format. Open [HTML to PDF](/tools/html-to-pdf), upload your self-contained .html, download the PDF. For Markdown source, convert to HTML first or use [Markdown to PDF](/tools/markdown-to-pdf) directly.
