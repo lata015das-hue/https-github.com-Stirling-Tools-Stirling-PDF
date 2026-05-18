@@ -1,0 +1,78 @@
+---
+title: "How to Add a Trusted Timestamp to a PDF"
+description: "Add a trusted timestamp to a PDF to prove it existed at a specific point in time. Essential for legal evidence, intellectual property, and compliance."
+slug: "timestamp-pdf-document"
+keyword: "add timestamp to pdf"
+tags: ["pdf", "security", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Add a Trusted Timestamp to a PDF
+
+> **Short answer.** To add a trusted timestamp to a PDF, open [Timestamp PDF](/tools/timestamp-pdf), upload the file, and download the timestamped version. The timestamp proves the document existed in its current form at a specific date and time, issued by a trusted authority.
+
+A timestamp is different from a "date modified" property (which anyone can change). A trusted timestamp is cryptographic proof from a third-party Time Stamping Authority (TSA) that the document existed at that exact moment.
+
+## What you'll need
+
+- A PDF you want to timestamp.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Timestamp PDF](/tools/timestamp-pdf).
+2. **Upload.** Drop the PDF.
+3. **Timestamp.** The tool contacts a TSA and embeds the cryptographic timestamp.
+4. **Download.** The PDF now carries proof of existence at that point in time.
+
+## Use cases
+
+- **Intellectual property.** Prove you created a design, code, or document before a specific date.
+- **Legal evidence.** Timestamped documents carry more weight in court than self-dated ones.
+- **Regulatory compliance.** Some industries require timestamped submissions.
+- **Contract disputes.** Prove a contract version existed before an alleged modification.
+
+## Timestamp vs. Digital Signature
+
+| Feature | Timestamp | Digital Signature |
+|---|---|---|
+| Proves when | Yes | No (unless combined with timestamp) |
+| Proves who | No | Yes (identifies the signer) |
+| Requires certificate | No (uses TSA) | Yes (your own certificate) |
+| Tamper-evident | Yes | Yes |
+
+For maximum assurance: [Certificate Sign](/tools/cert-sign) + timestamp together.
+
+## Frequently asked questions
+
+### Is it free to timestamp a PDF?
+
+Yes. [Timestamp PDF](/tools/timestamp-pdf) is free, no signup.
+
+### Who provides the timestamp?
+
+A Time Stamping Authority (TSA) — a trusted third party that certifies the time. The tool connects to one automatically.
+
+### Does timestamping change the document?
+
+The timestamp is embedded as metadata. Page content is unchanged.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local. The TSA sees a hash of your document (not the content itself).
+
+### Can a timestamp be forged?
+
+Not if issued by a recognized TSA. The cryptographic proof is verifiable by anyone.
+
+## Wrap-up
+
+A trusted timestamp proves a PDF existed at a specific moment in time. Open [Timestamp PDF](/tools/timestamp-pdf), upload, download the timestamped version. Combine with [Certificate Sign](/tools/cert-sign) for full authentication (who + when).

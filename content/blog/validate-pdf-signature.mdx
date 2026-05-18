@@ -1,0 +1,72 @@
+---
+title: "How to Validate a Digital Signature in a PDF"
+description: "Validate a digital signature in a PDF to confirm the document hasn't been tampered with and the signer is who they claim to be."
+slug: "validate-pdf-signature"
+keyword: "validate digital signature pdf"
+tags: ["pdf", "security", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Validate a Digital Signature in a PDF
+
+> **Short answer.** To validate a digital signature in a PDF, open [Validate Signature](/tools/validate-signature), upload the signed file, and check the result: valid (document unchanged, certificate trusted), invalid (document modified or certificate expired), or unknown (certificate not in trust chain).
+
+Receiving a signed PDF doesn't mean it's trustworthy. Validation confirms two things: the document hasn't been altered since signing, and the certificate belongs to who it claims.
+
+## What you'll need
+
+- A digitally signed PDF.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Validate Signature](/tools/validate-signature).
+2. **Upload.** Drop the signed PDF.
+3. **Check result.** The tool reports: valid / invalid / unknown certificate.
+4. **Act accordingly.** Valid = trust. Invalid = reject or re-request. Unknown = verify the signer's identity through other channels.
+
+## What validation checks
+
+- **Integrity:** has any byte of the document changed since signing? Even adding a bookmark invalidates the signature.
+- **Certificate validity:** is the signing certificate expired? Revoked?
+- **Trust chain:** is the certificate issued by a recognized Certificate Authority?
+
+## Common pitfalls
+
+- **"Unknown" doesn't mean fake.** A self-signed certificate triggers "unknown" even if the document is legitimate. Verify through other channels.
+- **Editing after signing invalidates.** Any modification — even [Add Page Numbers](/tools/add-page-numbers) — breaks the signature. Validate BEFORE making changes.
+- **Multiple signatures.** A document can have multiple signatures. Each is validated independently.
+
+## Frequently asked questions
+
+### Is it free to validate a PDF signature?
+
+Yes. [Validate Signature](/tools/validate-signature) is free, no signup.
+
+### Does validation execute any code?
+
+No. It reads the signature data mathematically. No scripts are executed.
+
+### What if the signature is invalid?
+
+The document was modified after signing. Request a fresh signed copy from the original signer.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### Can I validate and then sign myself?
+
+Yes. Validate first to check the existing signature, then [Certificate Sign](/tools/cert-sign) to add your own signature (the original signature may be invalidated by the structural change of adding a second signature — depends on the implementation).
+
+## Wrap-up
+
+Validating a PDF signature confirms document integrity and signer identity. Open [Validate Signature](/tools/validate-signature), upload, check the result. For signing your own documents, use [Certificate Sign](/tools/cert-sign).

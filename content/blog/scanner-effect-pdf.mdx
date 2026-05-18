@@ -1,0 +1,73 @@
+---
+title: "How to Make a PDF Look Like a Physical Scan"
+description: "Apply a scanner effect to a PDF to make it look like a physical scan. Add slight rotation, noise, and texture for a realistic scanned appearance."
+slug: "scanner-effect-pdf"
+keyword: "make pdf look like scan"
+tags: ["pdf", "advance", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Make a PDF Look Like a Physical Scan
+
+> **Short answer.** To make a PDF look like a physical scan, open [Scanner Effect](/tools/scanner-effect), upload the file, and download the version with realistic scan artifacts: slight rotation, paper texture, and subtle noise.
+
+There are legitimate reasons to simulate a scan: matching the appearance of other scanned documents in a collection, testing OCR workflows, or creating realistic mockups.
+
+## What you'll need
+
+- A digital PDF you want to look scanned.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Scanner Effect](/tools/scanner-effect).
+2. **Upload.** Drop the digital PDF.
+3. **Apply effect.** The tool adds scan-like artifacts.
+4. **Download.** The output looks like it came from a flatbed scanner.
+
+## What the effect adds
+
+- Slight page rotation (0.5–2°) simulating paper misalignment.
+- Paper texture/grain overlay.
+- Subtle brightness variation.
+- Minor edge shadows (scanner lid effect).
+
+## Common pitfalls
+
+- **File size increases.** The scan effect converts vector text to raster. Output is image-based and larger.
+- **Text no longer selectable.** After the effect, the PDF is essentially images. Run [OCR PDF](/tools/ocr-pdf) afterward if you need searchability back.
+- **Over-application.** The effect should be subtle. Heavy noise makes the document unreadable.
+
+## Frequently asked questions
+
+### Is it free?
+
+Yes. [Scanner Effect](/tools/scanner-effect) is free, no signup.
+
+### Does it make the text un-selectable?
+
+Yes — the effect rasterizes pages. For searchable text, run [OCR PDF](/tools/ocr-pdf) on the output.
+
+### Is this for making fake documents?
+
+No. Use for legitimate purposes: testing OCR, matching document collections, creating mockups. Forging documents is illegal.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### Can I reverse the effect?
+
+No. The original vector data is lost. Keep the original digital version.
+
+## Wrap-up
+
+The scanner effect simulates a physical scan for legitimate purposes. Open [Scanner Effect](/tools/scanner-effect), upload, download. If you need text back afterward, run [OCR PDF](/tools/ocr-pdf).

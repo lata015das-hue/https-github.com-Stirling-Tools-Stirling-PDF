@@ -1,0 +1,71 @@
+---
+title: "How to Show JavaScript Embedded in a PDF"
+description: "Show JavaScript embedded in a PDF to audit for malicious code, debug forms, or understand automated behaviors before opening untrusted files."
+slug: "show-javascript-in-pdf"
+keyword: "show javascript in pdf"
+tags: ["pdf", "other", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Show JavaScript Embedded in a PDF
+
+> **Short answer.** To show JavaScript in a PDF, open [Show JavaScript](/tools/show-javascript), upload the file, and view all embedded scripts. Use this to audit untrusted PDFs before opening them in a reader that might execute the code.
+
+PDFs can contain executable JavaScript — form validation logic, auto-calculations, or malicious payloads. Before trusting a PDF from an unknown source, inspecting its scripts tells you whether it's safe.
+
+## What you'll need
+
+- A PDF you want to inspect.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for handling suspicious files safely.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Show JavaScript](/tools/show-javascript).
+2. **Upload.** Drop the PDF.
+3. **View.** The tool displays all JavaScript found in the file.
+4. **Assess.** Is it form validation (safe) or does it try to open URLs, download files, or execute system commands (dangerous)?
+
+## What to look for
+
+- **Safe:** `event.value = event.value.toUpperCase()` (form formatting).
+- **Suspicious:** `app.launchURL("http://...")` (opens external URLs).
+- **Dangerous:** `util.printf`, `this.submitForm`, or obfuscated code.
+
+## Common pitfalls
+
+- **No JavaScript found.** Most PDFs don't have any. That's normal and safe.
+- **False sense of security.** JavaScript isn't the only attack vector. PDFs can also exploit vulnerabilities in readers. Keep your PDF reader updated.
+
+## Frequently asked questions
+
+### Is it free to view PDF JavaScript?
+
+Yes. [Show JavaScript](/tools/show-javascript) is free, no signup.
+
+### Does viewing JavaScript execute it?
+
+No. The tool displays the code as text. It doesn't run it.
+
+### Should I sanitize the file after finding scripts?
+
+Yes. Use [Sanitize PDF](/tools/sanitize-pdf) to strip JavaScript and other potentially dangerous elements.
+
+### Is my file safe during inspection?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local. For suspicious files from unknown sources, always self-host.
+
+### What if I need the JavaScript for forms?
+
+If the scripts are legitimate form logic, leave them. Only sanitize if the scripts are unwanted or suspicious.
+
+## Wrap-up
+
+Showing JavaScript in a PDF is a security audit step. Open [Show JavaScript](/tools/show-javascript), upload, inspect. If scripts are suspicious, run [Sanitize PDF](/tools/sanitize-pdf) to remove them.

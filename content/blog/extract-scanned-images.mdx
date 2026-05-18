@@ -1,0 +1,73 @@
+---
+title: "How to Extract Individual Scans from PDF Pages"
+description: "Split scanned PDF pages that contain multiple documents per page into individual images. Useful for batch scans with multiple receipts or photos per sheet."
+slug: "extract-scanned-images"
+keyword: "extract individual scans from pdf"
+tags: ["pdf", "advance", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Extract Individual Scans from PDF Pages
+
+> **Short answer.** To extract individual scans from a PDF, open [Extract Scans](/tools/extract-image-scans), upload the file, and the tool splits each page into its component scanned documents — detecting boundaries between separate items on the same page.
+
+A batch scanner captures 4 receipts on one A4 page. Or a photo album scan has multiple photos per sheet. Instead of manually cropping each one, the extraction tool detects the boundaries and produces individual files.
+
+## What you'll need
+
+- A scanned PDF with multiple documents/photos per page.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Extract Scans](/tools/extract-image-scans).
+2. **Upload.** Drop the PDF with multi-item pages.
+3. **Extract.** The tool detects item boundaries and splits them.
+4. **Download.** Each detected item is a separate image/PDF.
+
+## Use cases
+
+- **Batch receipts.** 4 receipts scanned on one page → 4 individual receipt files.
+- **Photo albums.** Multiple photos per scan → individual photo files.
+- **Business cards.** Multiple cards scanned together → individual card images.
+- **Document sorting.** Mixed documents scanned in one batch → separated by detected boundaries.
+
+## Common pitfalls
+
+- **Items too close together.** The tool needs visual separation (white space) between items to detect boundaries.
+- **Uneven backgrounds.** A colored or dirty scanner bed may confuse boundary detection.
+- **Single item per page.** If there's only one document per page, use [Extract Images](/tools/extract-images) instead.
+
+## Frequently asked questions
+
+### Is it free?
+
+Yes. [Extract Scans](/tools/extract-image-scans) is free, no signup.
+
+### How does it detect boundaries?
+
+By analyzing contrast differences and whitespace between items on the page. Clear separation = better detection.
+
+### Does it work on regular (non-scanned) PDFs?
+
+It's designed for scanned content. For regular PDFs, use [Extract Images](/tools/extract-images) or [Extract Pages](/tools/extract-pages).
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### Can I control detection sensitivity?
+
+Depends on the tool options. If detection is wrong, try adjusting the scan — add more whitespace between items before scanning.
+
+## Wrap-up
+
+Extracting individual scans from multi-item pages automates what would otherwise be tedious manual cropping. Open [Extract Scans](/tools/extract-image-scans), upload the batch scan, download individual files. For single-item pages, use [Extract Images](/tools/extract-images) instead.

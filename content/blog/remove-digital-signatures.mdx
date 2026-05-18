@@ -1,0 +1,75 @@
+---
+title: "How to Remove Digital Signatures from a PDF"
+description: "Remove digital signatures from a PDF when you need to edit a previously signed document. Understand when removal is appropriate and legal."
+slug: "remove-digital-signatures"
+keyword: "remove digital signatures from pdf"
+tags: ["pdf", "security", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Remove Digital Signatures from a PDF
+
+> **Short answer.** To remove digital signatures from a PDF, open [Remove Signatures](/tools/remove-cert-sign), upload the signed file, and download the unsigned version. The document content remains; only the signature metadata is stripped.
+
+A signed PDF can't be edited without invalidating the signature. If you need to make legitimate changes (fix a typo, add a page number, update metadata), you must remove the signature first, edit, then re-sign.
+
+## What you'll need
+
+- A signed PDF you have the right to modify.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for handling signed documents securely.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Remove Signatures](/tools/remove-cert-sign).
+2. **Upload.** Drop the signed PDF.
+3. **Remove.** The tool strips all digital signature data.
+4. **Download.** The unsigned PDF is now editable.
+5. **Edit.** Make your changes.
+6. **Re-sign.** Use [Certificate Sign](/tools/cert-sign) to sign the updated version.
+
+## When removal is appropriate
+
+- You're the original signer and need to make corrections.
+- You're authorized by the signer to modify and re-sign.
+- The signature is outdated (expired certificate) and the document needs refreshing.
+- You need to [Flatten PDF](/tools/flatten) or [Compress PDF](/tools/compress-pdf) — both would invalidate the signature anyway.
+
+## When removal is NOT appropriate
+
+- You're not the signer and have no authorization.
+- The signature serves as legal evidence.
+- You're trying to forge or tamper with the document.
+
+## Frequently asked questions
+
+### Is it free to remove signatures?
+
+Yes. [Remove Signatures](/tools/remove-cert-sign) is free, no signup.
+
+### Does removing a signature change the content?
+
+No. Only the signature metadata is removed. Pages, text, and images remain identical.
+
+### Can the removal be detected?
+
+The document no longer has a signature. Anyone checking will see it's unsigned. There's no hidden record of the removal.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### Should I remove all signatures or just one?
+
+This tool removes all signatures. If you need to keep some, you'll need a more targeted approach with a PDF editor.
+
+## Wrap-up
+
+Removing digital signatures enables editing of previously locked documents. Open [Remove Signatures](/tools/remove-cert-sign), upload, download the unsigned version. After editing, re-sign with [Certificate Sign](/tools/cert-sign). Only remove signatures you have the right to remove.
