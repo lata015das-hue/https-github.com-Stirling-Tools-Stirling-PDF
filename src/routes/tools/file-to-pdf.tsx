@@ -1,0 +1,24 @@
+import ToolStub from "./_ToolStub";
+
+export const meta = {
+  title: "File to PDF — Free Online | Stirling-PDF",
+  description:
+    "Convert various file types to PDF Free, open source, and self-hostable so your files stay private.",
+  keyword: "file to pdf",
+  toolId: "file-to-pdf",
+  category: "convert" as const,
+  appUrl: "/index.html#/tool/file-to-pdf",
+};
+
+export default function Page() {
+  return (
+    <ToolStub
+      title={meta.title}
+      description={meta.description}
+      keyword={meta.keyword}
+      toolId={meta.toolId}
+      category={meta.category}
+      appUrl={meta.appUrl}
+    />
+  );
+}
