@@ -90,6 +90,11 @@ function renderPage(meta, related) {
   const titleClean = meta.title.split(' — ')[0];
   const cssPath = isAr ? '../../dist/tailwind.css' : '../dist/tailwind.css';
 
+  // CSS strategy: local built file first, CDN fallback if not built yet.
+  // After `npm run build`, the local file takes priority and CDN is unused.
+  const cssHtml = `<link rel="stylesheet" href="${cssPath}" onerror="this.remove()">
+    <script src="https://cdn.tailwindcss.com"></script>`;
+
   // Default steps
   const steps = isAr
     ? ['ارفع ملف PDF الخاص بك إلى الأداة.', `شغّل عملية ${meta.keyword} — بدون تسجيل.`, 'نزّل النتيجة. ملفاتك تبقى على بنيتك التحتية.']
@@ -118,6 +123,7 @@ function renderPage(meta, related) {
     <meta property="og:type" content="website">
     <meta property="og:locale" content="${isAr ? 'ar_SA' : 'en_US'}">
     <link rel="stylesheet" href="${cssPath}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="application/ld+json" data-generated="schema-generator">
     {
       "@context": "https://schema.org",
