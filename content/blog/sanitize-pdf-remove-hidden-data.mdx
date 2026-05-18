@@ -1,0 +1,79 @@
+---
+title: "How to Sanitize a PDF (Remove Hidden Data)"
+description: "Sanitize a PDF to remove hidden metadata, scripts, embedded files, and tracking data before sharing. Protect privacy beyond what redaction covers."
+slug: "sanitize-pdf-remove-hidden-data"
+keyword: "sanitize pdf remove hidden data"
+tags: ["pdf", "security", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Sanitize a PDF (Remove Hidden Data)
+
+> **Short answer.** To sanitize a PDF, open [Sanitize PDF](/tools/sanitize-pdf), upload the file, and download the cleaned version. The tool strips JavaScript, embedded files, form actions, and other potentially dangerous or privacy-leaking hidden content.
+
+Redaction removes visible text. Sanitization removes invisible dangers: embedded scripts, hidden metadata, file attachments, form submission URLs, and tracking beacons. If you're sharing a PDF externally, sanitize it.
+
+## What you'll need
+
+- A PDF you're about to share externally.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for maximum privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Sanitize PDF](/tools/sanitize-pdf).
+2. **Upload.** Drop the PDF.
+3. **Sanitize.** The tool strips dangerous and hidden elements.
+4. **Download.** The output is safe to share.
+
+## What gets removed
+
+- **JavaScript.** PDFs can contain executable scripts. Sanitization removes them.
+- **Embedded files.** Hidden attachments inside the PDF.
+- **Form actions.** URLs that forms submit data to.
+- **Metadata.** Author, creation software, edit history.
+- **External links to tracking pixels.** Some PDFs phone home when opened.
+- **Launch actions.** Triggers that run programs when the PDF is opened.
+
+## Sanitize vs. Redact vs. Flatten
+
+| Action | What it removes | Use when |
+|---|---|---|
+| [Sanitize PDF](/tools/sanitize-pdf) | Hidden scripts, metadata, embedded files | Sharing externally (security) |
+| [Auto Redact](/tools/auto-redact) | Visible sensitive text (names, SSNs) | Removing PII from content |
+| [Flatten PDF](/tools/flatten) | Form editability | Locking form values |
+
+For maximum security before external sharing: redact PII → sanitize hidden data → flatten forms → then share.
+
+## Frequently asked questions
+
+### Is it free to sanitize a PDF?
+
+Yes. [Sanitize PDF](/tools/sanitize-pdf) is free, no signup.
+
+### Does it change the visible content?
+
+No. Only hidden/invisible elements are removed. The pages look identical.
+
+### Should I sanitize before or after signing?
+
+Before. Sanitization modifies the file, which would invalidate a digital signature. Sanitize first, then [Certificate Sign](/tools/cert-sign).
+
+### Is my file safe during sanitization?
+
+Public tools see your unsanitized file. Self-host for sensitive documents.
+
+### How do I know if my PDF has hidden data?
+
+Use [PDF Info](/tools/get-info-on-pdf) to check what's inside, or [Show JavaScript](/tools/show-javascript) to see if scripts are embedded.
+
+## Wrap-up
+
+Sanitizing a PDF removes what you can't see but could hurt you. Open [Sanitize PDF](/tools/sanitize-pdf), upload, download the clean version. Combine with [Auto Redact](/tools/auto-redact) for visible PII and [Update Metadata](/tools/update-metadata) for properties cleanup.

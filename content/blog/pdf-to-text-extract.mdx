@@ -1,0 +1,78 @@
+---
+title: "How to Extract Text from a PDF"
+description: "Extract all text from a PDF into a plain text file. Works on text-based and OCR'd scanned PDFs. Free, no signup, self-hostable."
+slug: "pdf-to-text-extract"
+keyword: "extract text from pdf"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Extract Text from a PDF
+
+> **Short answer.** To extract text from a PDF, open [PDF to Text](/tools/pdf-to-text), upload the file, and download the plain .txt output. For scanned PDFs, run [OCR PDF](/tools/ocr-pdf) first to create the text layer.
+
+You need the prose from a report — without the formatting, images, or headers. Or you want to feed a document into a search index, a translation tool, or an NLP pipeline. Text extraction gives you raw content in seconds.
+
+## What you'll need
+
+- A PDF with selectable text (or a scanned PDF + OCR step).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Check selectability.** Open the PDF, try Ctrl+A. If text highlights, proceed. If not, run [OCR PDF](/tools/ocr-pdf) first.
+2. **Open the tool.** Go to [PDF to Text](/tools/pdf-to-text).
+3. **Upload.** Drop the PDF.
+4. **Extract.** Click the action button.
+5. **Download.** A plain .txt file with all the text content, page by page.
+
+## What you get (and what you lose)
+
+| Preserved | Lost |
+|---|---|
+| All text content | Formatting (bold, italic, fonts) |
+| Reading order (mostly) | Images and graphics |
+| Paragraph structure | Tables (become space-separated text) |
+| Page breaks | Colors and backgrounds |
+
+The output is raw text. If you need formatting preserved, use [PDF to Word](/tools/pdf-to-word) instead.
+
+## Common pitfalls
+
+- **Empty output from a scan.** The PDF is images-only. Run [OCR PDF](/tools/ocr-pdf) first.
+- **Garbled text.** The PDF uses an unusual encoding or custom fonts without proper Unicode mapping. Try [PDF to Word](/tools/pdf-to-word) as an alternative.
+- **Table data is messy.** Text extraction doesn't understand table structure. For tables, use [PDF to CSV](/tools/pdf-to-csv) instead.
+
+## Frequently asked questions
+
+### Is it free to extract text from a PDF?
+
+Yes. [PDF to Text](/tools/pdf-to-text) is free, no signup.
+
+### Does it preserve paragraph breaks?
+
+Mostly. The tool inserts line breaks where the PDF has them. Some PDFs have mid-sentence line breaks from column layouts.
+
+### Can I extract text from a specific page only?
+
+[Extract Pages](/tools/extract-pages) the page(s) you want first, then run text extraction on the result.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### What about right-to-left text (Arabic, Hebrew)?
+
+Text extraction preserves the character data. The .txt file will contain the correct characters, though display depends on your text editor's RTL support.
+
+## Wrap-up
+
+Extracting text from a PDF strips away everything except the words. Open [PDF to Text](/tools/pdf-to-text), upload, download the .txt. For scans, run [OCR PDF](/tools/ocr-pdf) first. For structured data, try [PDF to CSV](/tools/pdf-to-csv).

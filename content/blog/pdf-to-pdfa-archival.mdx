@@ -1,0 +1,80 @@
+---
+title: "How to Convert PDF to PDF/A for Archival"
+description: "Convert PDF to PDF/A archival format for long-term preservation. Ensures your documents remain readable decades from now without external dependencies."
+slug: "pdf-to-pdfa-archival"
+keyword: "convert pdf to pdf/a"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert PDF to PDF/A for Archival
+
+> **Short answer.** To convert a PDF to PDF/A, open [PDF to PDF/A](/tools/pdf-to-pdfa), upload your file, and download the archival-compliant version. PDF/A embeds all fonts and prohibits external dependencies, ensuring the document looks identical 50 years from now.
+
+PDF/A is an ISO-standardized subset of PDF designed for long-term preservation. Courts, government archives, and regulated industries require it because it guarantees the document is self-contained — no broken font links, no external resources, no ambiguity.
+
+## What you'll need
+
+- A PDF you want to archive.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for confidential archives.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [PDF to PDF/A](/tools/pdf-to-pdfa).
+2. **Upload.** Drop your PDF.
+3. **Convert.** The tool embeds all fonts, removes external references, and produces a compliant file.
+4. **Download.** The output is PDF/A compliant.
+5. **Validate** (optional). Use a PDF/A validator to confirm compliance if required by your organization.
+
+## PDF vs. PDF/A — what changes
+
+| Feature | Regular PDF | PDF/A |
+|---|---|---|
+| External font references | Allowed | Prohibited (all fonts embedded) |
+| JavaScript | Allowed | Prohibited |
+| Encryption | Allowed | Prohibited |
+| Audio/video | Allowed | Prohibited |
+| Transparency | Depends on version | Restricted (PDF/A-1) or allowed (PDF/A-2) |
+| File size | Smaller (may reference external resources) | Larger (self-contained) |
+
+The content looks identical. The structure is what changes — everything needed to render the document is inside the file.
+
+## Common pitfalls
+
+- **File gets larger.** Embedding all fonts increases size. Normal and expected.
+- **Transparency lost (PDF/A-1).** If your PDF uses transparency effects, PDF/A-1 will flatten them. Use PDF/A-2 if your archive accepts it.
+- **Encrypted PDFs fail.** Remove encryption with [Remove Password](/tools/unlock-pdf) before converting to PDF/A.
+
+## Frequently asked questions
+
+### Is it free to convert to PDF/A?
+
+Yes. [PDF to PDF/A](/tools/pdf-to-pdfa) is free, no signup.
+
+### Which PDF/A version should I use?
+
+PDF/A-1b is the most widely accepted. PDF/A-2b adds transparency support. Ask your archive or regulatory body which they require.
+
+### Does it change how the document looks?
+
+No (in most cases). The visual appearance is preserved. Only internal structure changes.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local. For legal archives, self-host.
+
+### Can I convert back from PDF/A to regular PDF?
+
+PDF/A is still a valid PDF. Any PDF reader opens it. There's nothing to "convert back" — you just lose the archival guarantees if you edit it.
+
+## Wrap-up
+
+Converting to PDF/A ensures your documents survive technological change. Open [PDF to PDF/A](/tools/pdf-to-pdfa), upload, download the archival version. For encrypted files, [Remove Password](/tools/unlock-pdf) first.

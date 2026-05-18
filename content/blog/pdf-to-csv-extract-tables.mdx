@@ -1,0 +1,76 @@
+---
+title: "How to Extract Tables from a PDF to CSV"
+description: "Extract tables from a PDF to CSV format for use in Excel, Google Sheets, or databases. Free tool for structured data extraction."
+slug: "pdf-to-csv-extract-tables"
+keyword: "extract tables from pdf to csv"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Extract Tables from a PDF to CSV
+
+> **Short answer.** To extract tables from a PDF to CSV, open [PDF to CSV](/tools/pdf-to-csv), upload the PDF containing tables, and download the structured CSV output ready for Excel or Google Sheets.
+
+Financial reports, invoices, academic data, government filings — critical data trapped in PDF tables that you need in a spreadsheet. Manual re-typing is error-prone and slow. Extraction gives you the raw data in seconds.
+
+## What you'll need
+
+- A PDF containing one or more tables.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for confidential financial data.
+
+## Step-by-step
+
+1. **Check the PDF.** Is the text selectable? If yes, tables can be extracted directly. If no (scanned document), run [OCR PDF](/tools/ocr-pdf) first.
+2. **Open the tool.** Go to [PDF to CSV](/tools/pdf-to-csv).
+3. **Upload.** Drop the PDF.
+4. **Extract.** The tool identifies table structures and outputs CSV.
+5. **Download.** Open in Excel, Google Sheets, or import into a database.
+
+## What extracts well (and what doesn't)
+
+| Extracts well | May need cleanup |
+|---|---|
+| Simple tables with clear borders | Borderless tables (whitespace-aligned) |
+| Header rows + data rows | Merged cells spanning multiple columns |
+| Consistent column counts | Tables with nested sub-tables |
+| Text-only cells | Cells containing images or formulas |
+
+## Common pitfalls
+
+- **Scanned tables.** No text to extract. Run [OCR PDF](/tools/ocr-pdf) first.
+- **Multi-page tables.** The tool may treat each page as a separate table. Concatenate manually in Excel.
+- **Merged cells.** May appear as empty cells in CSV. Add the values manually after extraction.
+
+## Frequently asked questions
+
+### Is it free to extract PDF tables to CSV?
+
+Yes. [PDF to CSV](/tools/pdf-to-csv) is free, no signup.
+
+### Does it work on scanned PDFs?
+
+Only after [OCR PDF](/tools/ocr-pdf). A scan is just an image — there are no cells to extract until OCR creates a text layer.
+
+### Can I extract multiple tables from one PDF?
+
+The tool outputs all detected tables. In the CSV, different tables may appear as separate sections.
+
+### Is my data safe?
+
+Public tools see your financial data. Self-hosted Stirling-PDF keeps it on your machine. For invoices, reports, and financial documents, always self-host.
+
+### What if the output is messy?
+
+Clean up in Excel: fix column alignment, remove empty rows, merge split cells. The extraction gives you 80-90% of the work done.
+
+## Wrap-up
+
+Extracting tables from a PDF to CSV saves hours of manual data entry. Open [PDF to CSV](/tools/pdf-to-csv), upload, download structured data. For scanned documents, run [OCR PDF](/tools/ocr-pdf) first.

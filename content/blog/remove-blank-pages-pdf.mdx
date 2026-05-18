@@ -1,0 +1,74 @@
+---
+title: "How to Remove Blank Pages from a PDF"
+description: "Remove blank pages from a PDF automatically. Detect and strip empty pages to reduce file size and clean up documents before sharing."
+slug: "remove-blank-pages-pdf"
+keyword: "remove blank pages from pdf"
+tags: ["pdf", "other", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Remove Blank Pages from a PDF
+
+> **Short answer.** To remove blank pages from a PDF, open [Remove Blank Pages](/tools/remove-blanks), upload the file, and download the cleaned version. The tool detects pages with no content and strips them automatically.
+
+Scanned documents often end with blank pages. Book exports add separator pages. Mail merges insert blanks between recipients. Removing them manually page-by-page is tedious — automated detection does it in one click.
+
+## What you'll need
+
+- A PDF with one or more blank pages.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Remove Blank Pages](/tools/remove-blanks).
+2. **Upload.** Drop the PDF.
+3. **Detect and remove.** The tool scans each page for content. Pages below the content threshold are removed.
+4. **Download.** The output contains only pages with actual content.
+
+## What counts as "blank"
+
+- Pages with zero text and zero images.
+- Pages with only a header/footer (depending on the tool's sensitivity setting).
+- Pages that are entirely white (or entirely one color for scanned docs).
+
+Near-blank pages (a single page number, a faint watermark) may or may not be detected depending on the threshold.
+
+## Common pitfalls
+
+- **Page numbers removed.** If a page has only a page number and no other content, it may be detected as blank. Review the output.
+- **Colored background ≠ blank.** A page with a colored background but no text/images may not be detected as blank.
+- **Wanted some blanks.** If you intentionally have blank separator pages, don't use auto-removal — use [Remove Pages](/tools/remove-pages) to target specific page numbers.
+
+## Frequently asked questions
+
+### Is it free to remove blank pages?
+
+Yes. [Remove Blank Pages](/tools/remove-blanks) is free, no signup.
+
+### Does it reduce file size?
+
+Yes. Fewer pages = smaller file. For maximum reduction, follow up with [Compress PDF](/tools/compress-pdf).
+
+### Can I preview which pages will be removed?
+
+The tool shows which pages were detected as blank in the output summary. Review before accepting.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### What if it removes a page I need?
+
+Use the original file and [Remove Pages](/tools/remove-pages) to manually specify which pages to delete.
+
+## Wrap-up
+
+Removing blank pages from a PDF is a one-click cleanup task. Open [Remove Blank Pages](/tools/remove-blanks), upload, download the cleaned version. Follow up with [Compress PDF](/tools/compress-pdf) for maximum file size reduction.
