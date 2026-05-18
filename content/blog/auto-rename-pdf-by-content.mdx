@@ -1,0 +1,78 @@
+---
+title: "How to Auto-Rename a PDF Based on Its Content"
+description: "Automatically rename a PDF file based on its content — extract title, date, or keywords to generate a meaningful filename without manual work."
+slug: "auto-rename-pdf-by-content"
+keyword: "auto rename pdf based on content"
+tags: ["pdf", "advance", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Auto-Rename a PDF Based on Its Content
+
+> **Short answer.** To auto-rename a PDF based on its content, open [Auto Rename](/tools/auto-rename), upload the file, and download it with a filename generated from the document's content (title, date, subject, or first heading).
+
+You have 200 scanned invoices named "scan001.pdf" through "scan200.pdf." Finding the one from March requires opening each file. Auto-renaming extracts meaningful data from the content and uses it as the filename.
+
+## What you'll need
+
+- A PDF (or batch of PDFs) with generic filenames.
+- The PDF should have selectable text (if scanned, run [OCR PDF](/tools/ocr-pdf) first).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Ensure text is selectable.** If the PDF is a scan, run [OCR PDF](/tools/ocr-pdf) first.
+2. **Open the tool.** Go to [Auto Rename](/tools/auto-rename).
+3. **Upload.** Drop the PDF.
+4. **Rename.** The tool reads the content and generates a meaningful filename.
+5. **Download.** The file is now named based on its content (e.g., "Invoice-2026-03-15-Acme-Corp.pdf").
+
+## How renaming works
+
+The tool looks for structured data in this priority:
+1. PDF metadata title (if set and meaningful).
+2. First heading (H1 or large text) on page 1.
+3. Date patterns found in the first page.
+4. Combination of keywords from the first paragraph.
+
+The exact algorithm depends on the tool's configuration.
+
+## Common pitfalls
+
+- **Scanned PDF → generic name.** No text to read. Run [OCR PDF](/tools/ocr-pdf) first.
+- **Metadata is "Microsoft Word - Document1."** The metadata title is useless. The tool should fall back to content extraction.
+- **Filename too long.** Some operating systems limit filenames to 255 characters. The tool should truncate.
+
+## Frequently asked questions
+
+### Is it free to auto-rename PDFs?
+
+Yes. [Auto Rename](/tools/auto-rename) is free, no signup.
+
+### Does it change the file content?
+
+No. Only the filename changes. The document content remains identical.
+
+### Does it work on scanned documents?
+
+Only after [OCR PDF](/tools/ocr-pdf). Without OCR, there's no text to extract a name from.
+
+### Is my file safe?
+
+Public tools see your file content (to extract the name). Self-hosted Stirling-PDF keeps it local.
+
+### Can I customize the naming pattern?
+
+Depends on the tool's options. Some allow patterns like "{date}-{title}" or "{author}-{subject}."
+
+## Wrap-up
+
+Auto-renaming PDFs by content turns "scan001.pdf" into meaningful filenames without manual work. Open [Auto Rename](/tools/auto-rename), upload, download with a better name. For scans, run [OCR PDF](/tools/ocr-pdf) first.

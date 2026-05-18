@@ -1,0 +1,81 @@
+---
+title: "How to Convert PDF to XML"
+description: "Convert a PDF to structured XML for data processing, system integration, or programmatic content extraction. Free tool, no signup required."
+slug: "pdf-to-xml-structured"
+keyword: "convert pdf to xml"
+tags: ["pdf", "convert", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Convert PDF to XML
+
+> **Short answer.** To convert a PDF to XML, open [PDF to XML](/tools/pdf-to-xml), upload the file, and download the structured XML output containing the document's text, structure, and metadata in a machine-readable format.
+
+PDF is designed for humans to read. XML is designed for machines to process. Converting bridges the gap — enabling automated workflows, data imports, content management systems, and search indexing to consume document content programmatically.
+
+## What you'll need
+
+- A text-based PDF (not a scan — run [OCR PDF](/tools/ocr-pdf) first if scanned).
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [PDF to XML](/tools/pdf-to-xml).
+2. **Upload.** Drop the PDF.
+3. **Convert.** The tool extracts text and structure into XML format.
+4. **Download.** Open the XML in any text editor or feed it into your data pipeline.
+
+## What the XML contains
+
+- Document metadata (title, author, dates).
+- Page structure (page numbers, dimensions).
+- Text content organized by page and position.
+- Font information (name, size, style).
+- Paragraph and line boundaries.
+
+## Common use cases
+
+- **Data extraction pipelines.** Feed document content into databases or APIs.
+- **Content migration.** Move documents from one CMS to another.
+- **Search indexing.** Index document content for enterprise search.
+- **Compliance automation.** Extract structured data from regulatory filings.
+
+## Common pitfalls
+
+- **Scanned PDF → minimal output.** No text to extract. Run [OCR PDF](/tools/ocr-pdf) first.
+- **Complex layout → messy structure.** Multi-column layouts may not map cleanly to sequential XML.
+- **Encoding issues.** Non-Latin characters need proper UTF-8 handling in the output.
+
+## Frequently asked questions
+
+### Is it free to convert PDF to XML?
+
+Yes. [PDF to XML](/tools/pdf-to-xml) is free, no signup.
+
+### Is the output format standardized?
+
+The XML structure depends on the tool. It's typically a custom schema reflecting the PDF's internal structure, not a standard like XHTML or DocBook.
+
+### Does it work on scanned PDFs?
+
+Only after [OCR PDF](/tools/ocr-pdf). A scan has no text layer to convert.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### What about PDF to JSON instead?
+
+For JSON output, extract to XML first, then transform with XSLT or a script. Or use [PDF to Text](/tools/pdf-to-text) and parse programmatically.
+
+## Wrap-up
+
+Converting PDF to XML makes document content machine-readable. Open [PDF to XML](/tools/pdf-to-xml), upload, download structured data. For tables specifically, [PDF to CSV](/tools/pdf-to-csv) may be more appropriate.

@@ -1,0 +1,77 @@
+---
+title: "How to Remove Annotations from a PDF"
+description: "Remove all annotations, comments, highlights, and sticky notes from a PDF. Clean up review marks before final distribution."
+slug: "remove-pdf-annotations"
+keyword: "remove annotations from pdf"
+tags: ["pdf", "other", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Remove Annotations from a PDF
+
+> **Short answer.** To remove annotations from a PDF, open [Remove Annotations](/tools/remove-annotations), upload the file, and download the clean version. All comments, highlights, sticky notes, and markup are stripped.
+
+A document went through three rounds of review. The comments are resolved, the changes are made, but the sticky notes and highlights are still visible. Stripping them produces a clean final version ready for distribution.
+
+## What you'll need
+
+- A PDF with annotations you want to remove.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Open the tool.** Go to [Remove Annotations](/tools/remove-annotations).
+2. **Upload.** Drop the annotated PDF.
+3. **Remove.** The tool strips all annotation layers.
+4. **Download.** The output is annotation-free.
+
+## What gets removed
+
+- Sticky notes and comments.
+- Text highlights (yellow, green, etc.).
+- Underlines and strikethroughs.
+- Freehand drawings and markup.
+- Text boxes added as annotations.
+- File attachment annotations.
+
+What is NOT removed: watermarks (use [Sanitize PDF](/tools/sanitize-pdf)), form fields (use [Flatten PDF](/tools/flatten)), or page content that was typed into the original document.
+
+## Common pitfalls
+
+- **Wanted to keep some annotations.** This tool removes ALL annotations. There's no selective option — export the ones you need first.
+- **File size didn't change much.** Annotations are usually small. For size reduction, use [Compress PDF](/tools/compress-pdf).
+- **Confused with flattening.** [Flatten PDF](/tools/flatten) burns annotations INTO the page (permanent). Removing deletes them entirely.
+
+## Frequently asked questions
+
+### Is it free to remove annotations?
+
+Yes. [Remove Annotations](/tools/remove-annotations) is free, no signup.
+
+### Does it affect the document content?
+
+No. Only annotation layers are removed. Text, images, and formatting remain identical.
+
+### Can I selectively remove specific annotations?
+
+Not with this tool — it's all-or-nothing. For selective removal, use a PDF editor like Adobe Acrobat.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### Should I remove annotations before or after flattening?
+
+Remove first if you want them gone. Flatten only if you want them permanently visible on the page.
+
+## Wrap-up
+
+Removing annotations cleans up a PDF for final distribution. Open [Remove Annotations](/tools/remove-annotations), upload, download the clean version. For deeper cleanup, combine with [Sanitize PDF](/tools/sanitize-pdf) and [Update Metadata](/tools/update-metadata).

@@ -1,0 +1,77 @@
+---
+title: "How to Create a Booklet from a PDF for Printing"
+description: "Arrange PDF pages for booklet printing so they fold correctly into a small book. Free imposition tool for saddle-stitch and half-fold layouts."
+slug: "pdf-booklet-printing"
+keyword: "create booklet from pdf for printing"
+tags: ["pdf", "page-operations", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Create a Booklet from a PDF for Printing
+
+> **Short answer.** To create a booklet from a PDF, open [Booklet Imposition](/tools/booklet-imposition), upload your document, and download the rearranged version. Print it double-sided, fold in half, and staple — the pages are in the correct order for a bound booklet.
+
+Booklet imposition rearranges pages so that when printed double-sided on standard paper and folded in half, the page numbers read sequentially. It's the same technique print shops use for pamphlets, zines, and small books.
+
+## What you'll need
+
+- A PDF with the content you want as a booklet (ideally a multiple of 4 pages).
+- A printer that supports double-sided printing.
+- A browser.
+- Optional: self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) for privacy.
+
+## Step-by-step
+
+1. **Check page count.** Booklets work best with page counts divisible by 4. If yours isn't, add blank pages with any editor.
+2. **Crop excess margins.** Use [Crop PDF](/tools/crop) first — large margins waste space in a booklet.
+3. **Open the tool.** Go to [Booklet Imposition](/tools/booklet-imposition).
+4. **Upload.** Drop the PDF.
+5. **Download.** The output has pages rearranged for booklet printing.
+6. **Print double-sided, flip on short edge.** Fold in half. Staple the spine.
+
+## How imposition works
+
+For a 4-page booklet on one sheet:
+- Side 1: page 4 (left) + page 1 (right)
+- Side 2: page 2 (left) + page 3 (right)
+
+When folded, you read pages 1-2-3-4 in order. The tool handles this math for any page count.
+
+## Common pitfalls
+
+- **Odd page count.** Add a blank page at the end to make it divisible by 4.
+- **Wrong fold direction.** Print settings must be "flip on short edge" for the fold to work.
+- **Content too small.** Each page is printed at half its original size. Start with large text or [Scale Pages](/tools/scale-pages) before imposition.
+
+## Frequently asked questions
+
+### Is it free to create a booklet?
+
+Yes. [Booklet Imposition](/tools/booklet-imposition) is free, no signup.
+
+### Do I need a special printer?
+
+Any printer with double-sided (duplex) printing works. Manual duplex (re-feeding paper) also works with care.
+
+### Can I make a booklet from a single-sided scan?
+
+Yes. The imposition tool doesn't care where the content came from — it just rearranges pages.
+
+### Is my file safe?
+
+Public tools see your file. Self-hosted Stirling-PDF keeps it local.
+
+### What paper size should I use?
+
+For A5 booklets, use A4 paper (the booklet is half the sheet). For US half-letter booklets, use Letter paper.
+
+## Wrap-up
+
+Creating a booklet from a PDF is an imposition task — the tool rearranges pages so folding produces the correct reading order. Open [Booklet Imposition](/tools/booklet-imposition), upload, print double-sided, fold, staple. Pre-process with [Crop PDF](/tools/crop) for tighter margins.
