@@ -22,8 +22,18 @@ Status legend: [ ] todo · [~] in progress · [x] done · [!] blocked
     data-tool-id="...">` for the Schema Generator hook to fill.
   - FR-6: missing FAQ renders an explicit `TODO: write FAQ`
     (`data-todo="faq"`), not generic copy.
-  - **Verification (per-stub line count):** each of the 10 stubs is now 15
-    lines (`wc -l src/routes/tools/*.tsx`), well under the 30-line ceiling.
+  - **Catalog coverage:** the existing 10 commercial stubs were migrated to
+    the new contract, then the remaining **46 stubs** were generated to
+    cover every tool in `js/tools-data.js`. Total: 56 stubs ↔ 56 tools, zero
+    drift between `_ToolStub.tsx` `TOOL_CATALOG`, the filesystem, and
+    `js/tools-data.js`. This satisfies `requirements.md` §6 success
+    criterion ("All 56 tools in `tools-data.js` have at least the EN
+    variant of the layout rendering with no `TODO` placeholders") modulo
+    FAQ/hero copy, which is T2/T3 (out of scope).
+  - **Verification (per-stub line count):** every one of the 56 stubs is
+    15–17 lines (`wc -l src/routes/tools/*.tsx`), well under the 30-line
+    ceiling. Slug ↔ tool-id ↔ filename table is in
+    `src/routes/tools/README.md`.
   - **Audit pass:** `audit_tailwind_content.py` → exit 0 (4/4 class-bearing
     files inside globs; high CSS estimate 40 KB vs. 50 KB budget, 11 KB
     headroom). `lint_images.py` → exit 0 (the conditional hero `<img>`
