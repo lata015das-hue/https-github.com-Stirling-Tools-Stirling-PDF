@@ -1,0 +1,104 @@
+---
+title: "How to {{ACTION}} {{OBJECT}} {{QUALIFIER}}"
+description: "{{ONE_SENTENCE_DESCRIPTION_140_160_CHARS_INCLUDING_KEYWORD}}"
+slug: "how-to-{{slug}}"
+keyword: "{{primary keyword}}"
+tags: ["pdf", "{{tag}}", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+{/*
+   HOW-TO TEMPLATE
+   ---------------
+   This template is the canonical shape for how-to / informational articles.
+   Rules live in `.kiro/steering/seo-rules.md`. Don't remove sections — fill
+   them in. If a section truly doesn't apply, leave a one-line note and a
+   TODO so a reviewer can decide.
+
+   Slots:
+     {{ACTION}}, {{OBJECT}}, {{QUALIFIER}}, {{slug}}, {{tag}}, {{primary keyword}}
+*/}
+
+# How to {{ACTION}} {{OBJECT}} {{QUALIFIER}}
+
+> **Short answer.** {{ONE-SENTENCE ANSWER THAT INCLUDES THE TARGET KEYWORD.
+> Aim for ≤ 30 words; this often wins the featured snippet.}}
+
+{/* First-200-words zone: at least one inline tool link must appear here. */}
+
+## What you'll need
+
+- A PDF file you have the right to modify.
+- A browser, or a self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) instance for full privacy.
+- {{ANY_OTHER_PREREQUISITES}}
+
+## Step-by-step
+
+1. **{{Step 1 verb}}** — {{do this}}.
+2. **{{Step 2 verb}}** — {{do this}}.
+3. **{{Step 3 verb}}** — {{do this}}.
+4. **Download** the result.
+
+{/* Add more steps as needed. Use imperative verbs. Keep each step ≤ 2 sentences. */}
+
+## Why this approach
+
+{{2–4 sentences on tradeoffs vs. alternatives. Lean on Stirling-PDF's
+differentiators: free, open source, self-hostable, privacy-friendly. Do not
+disparage other tools by name without a verifiable basis.}}
+
+## Common pitfalls
+
+- **{{Pitfall 1}}** — {{how to avoid}}.
+- **{{Pitfall 2}}** — {{how to avoid}}.
+- **{{Pitfall 3}}** — {{how to avoid}}.
+
+## Frequently asked questions
+
+### Is {{primary keyword}} free?
+
+{{40–80 word answer ending with a soft link to the relevant tool.}}
+
+### How does {{primary keyword}} actually work?
+
+{{40–80 word answer.}}
+
+### Is it safe to {{primary keyword}} online?
+
+{{40–80 word answer that addresses privacy honestly. Mention self-hosting where
+appropriate.}}
+
+### Will it work on my files / OS / browser?
+
+{{40–80 word answer.}}
+
+### What if {{common edge case}}?
+
+{{40–80 word answer.}}
+
+## Wrap-up
+
+{{1–2 sentence recap.}} Open the [{{related tool name}}]({{tool path}}) tool
+when you're ready, or browse [all PDF tools](/index.html#/).
+
+{/*
+  Internal-linking checklist (delete before publish):
+  - [ ] Link to at least 3 tool ids that exist in js/tools-data.js.
+  - [ ] At least one inline link inside the first 200 words.
+  - [ ] Tool slugs match `/tools/<slug>` for static pages, or
+        `/index.html#/tool/<id>` for the SPA bridge.
+
+  SEO checklist (delete before publish):
+  - [ ] Target keyword in: H1, first 100 words, at least one H2, frontmatter
+        title + description, slug, hero alt (if image).
+  - [ ] Density between 0.8% and 2.0%.
+  - [ ] Flesch Reading Ease ≥ 60.
+  - [ ] FAQ has ≥ 5 Q/A.
+*/}

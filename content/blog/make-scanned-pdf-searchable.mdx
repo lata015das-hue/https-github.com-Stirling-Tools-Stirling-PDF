@@ -1,0 +1,73 @@
+---
+title: "How to Make a Scanned PDF Searchable (OCR Walkthrough)"
+description: "Make a scanned PDF searchable in minutes using OCR. Step-by-step guide for English, Arabic, French, German, Spanish, and Chinese, with privacy-friendly self-hosting."
+slug: "make-scanned-pdf-searchable"
+keyword: "make a scanned pdf searchable"
+tags: ["pdf", "ocr", "how-to"]
+lang: "en"
+dir: "ltr"
+date: ""
+updated: ""
+author: "Stirling-PDF Team"
+image: ""
+draft: true
+published: false
+---
+
+# How to Make a Scanned PDF Searchable (OCR Walkthrough)
+
+> **Short answer.** To make a scanned PDF searchable, run it through [OCR PDF](/index.html#/tool/ocr-pdf), pick the language that matches the document, and let the tool add an invisible text layer behind the scanned image. The output looks identical but is now selectable, copyable, and indexable.
+
+A scanned PDF is just a stack of pictures of text. Search engines, your file manager, and even the **Find** dialog inside your PDF reader cannot see the words. OCR — optical character recognition — fixes that by reading the pixels and writing a text layer on top. The image stays exactly as it was; the text becomes real. Once you make a scanned PDF searchable this way, you can search, copy, and feed the document into any text-based workflow.
+
+## What you'll need
+
+- A scanned PDF (photographed or fed through a flatbed scanner).
+- The language(s) the document is written in. Stirling-PDF ships with English, Arabic, French, German, Spanish, and Simplified Chinese out of the box.
+- A self-hosted [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) instance is recommended for sensitive documents so the scan never leaves your network.
+
+## Step-by-step
+
+1. **Pre-clean the file.** If the scan has a lot of empty pages, run [Remove Blank Pages](/index.html#/tool/remove-blanks) first. Fewer pages, faster OCR.
+2. **Open the tool.** Go to [OCR PDF](/index.html#/tool/ocr-pdf).
+3. **Pick the language.** Match the document. If the document mixes two languages (e.g., English and Arabic), run OCR twice, once with each language pack, into separate copies and compare which is more accurate for your content.
+4. **Run.** Click **Run OCR** and wait. Scans of 20–50 pages typically finish in under a minute on a self-hosted instance.
+5. **Verify.** Open the result and try **Ctrl/Cmd + F** for a word you know is in the document. If it highlights, you are done.
+
+## Why scans are not searchable by default (and why OCR fixes it)
+
+When a scanner saves a page as a PDF, it embeds a raster image of the page. PDF readers happily display images, but they have no idea what those images mean. OCR is a separate, optional step the scanner usually skips because it costs CPU. Doing it once, after the fact, fills in that gap and makes the document permanently searchable. That is the whole reason the workflow exists: you only have to make a scanned PDF searchable once per document, and the result sticks for the lifetime of the file.
+
+## How to make a scanned PDF searchable: the full pipeline
+
+Once you have done the OCR step, a small chain of follow-up tools turns the result into something you can actually live with:
+
+- **Compress.** OCR can grow file size. Run [Compress PDF](/index.html#/tool/compress-pdf) at the **Low** level afterward.
+- **Extract text.** Need just the prose? Run [PDF to Text](/index.html#/tool/pdf-to-text) on the OCR'd file.
+- **Convert to Word.** For editable output, [PDF to Word](/index.html#/tool/pdf-to-word) gives you a DOCX you can fix up.
+
+## Frequently asked questions
+
+### Is it free to make a scanned PDF searchable?
+
+Yes. The [OCR PDF](/index.html#/tool/ocr-pdf) tool is part of the free, open-source tier. There is no signup, no watermark, and no page limit when you self-host.
+
+### Which languages does the OCR support?
+
+Out of the box: English (`eng`), Arabic (`ara`), French (`fra`), German (`deu`), Spanish (`spa`), and Simplified Chinese (`chi_sim`). When you self-host, you can add more Tesseract language packs in the data folder.
+
+### Is OCR safe for sensitive documents?
+
+Public OCR sites see your scan. Self-hosted Stirling-PDF keeps the file on infrastructure you control. For HR records, contracts, and ID scans, run a self-hosted instance and do the OCR there.
+
+### Will OCR change the way the page looks?
+
+No. OCR adds an invisible text layer behind the existing image. The visual result is byte-for-byte the same to a reader; only **Find**, copy/paste, and search engines can now see the words.
+
+### What if the scan is crooked or low-resolution?
+
+OCR accuracy drops fast on noisy scans. Re-scan at 300 DPI, deskew if your scanner supports it, and try again. For images that are too dark or too light, [Replace/Invert Colors](/index.html#/tool/replace-invert-pdf) sometimes helps before OCR.
+
+## Wrap-up
+
+You only have to make a scanned PDF searchable once. Open [OCR PDF](/index.html#/tool/ocr-pdf), pick the right language, run it, and your archive becomes searchable forever. Pair it with [Compress PDF](/index.html#/tool/compress-pdf) and [PDF to Text](/index.html#/tool/pdf-to-text) for the full pipeline.

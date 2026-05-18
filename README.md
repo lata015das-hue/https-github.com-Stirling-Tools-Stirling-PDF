@@ -40,21 +40,37 @@ A lightweight, standalone frontend for Stirling-PDF that provides access to **al
    ```
 
 ### Run the Frontend
-Simply open `index.html` in your browser, or serve it with any static file server:
+
+This project has **one** build step: compiling Tailwind CSS to a static
+file. Do this once after cloning, and again whenever you add new utility
+classes to JS template strings:
+
+```bash
+npm install
+npm run build:css      # one-shot, minified -> dist/tailwind.css
+# or
+npm run watch:css      # rebuilds while you edit
+```
+
+After the build, just open `index.html` in your browser, or serve with any
+static file server:
 
 ```bash
 # Option 1: Direct open
 open index.html
 
 # Option 2: Python server
-cd stirling-pdf-free-frontend
 python3 -m http.server 3000
 
 # Option 3: Node.js
 npx serve .
 ```
 
-Then visit `http://localhost:3000`
+Then visit `http://localhost:3000`.
+
+If you forget to build, the page will show a friendly "stylesheet not built"
+message instead of an unstyled wall of HTML — see the inline guard in
+`index.html`.
 
 ### Backend Configuration
 The frontend connects to `http://localhost:8080` by default.
@@ -64,19 +80,25 @@ To change this, edit the `BACKEND_URL` variable in `js/tools-data.js`.
 
 ```
 stirling-pdf-free-frontend/
-├── index.html          # Entry point (loads Tailwind CDN)
+├── index.html              # Entry point (loads dist/tailwind.css + js/*)
+├── package.json            # Single dev dep: tailwindcss
+├── tailwind.config.js      # Theme + content globs (what Tailwind scans)
+├── src/
+│   └── styles/
+│       └── tailwind.css    # @tailwind base/components/utilities + line-clamp-2
+├── dist/
+│   └── tailwind.css        # Built output (gitignored; produced by `npm run build:css`)
 ├── js/
-│   ├── tools-data.js   # All free tool definitions & endpoints
-│   ├── api.js          # Backend communication layer
-│   ├── router.js       # Simple hash-based SPA router
-│   ├── components.js   # Reusable UI components
-│   └── app.js          # Main app logic & page renderers
+│   ├── tools-data.js       # All free tool definitions & endpoints
+│   ├── api.js              # Backend communication layer
+│   ├── router.js           # Simple hash-based SPA router
+│   ├── components.js       # Reusable UI components
+│   └── app.js              # Main app logic & page renderers
 └── README.md
 ```
 
 ## Tech Stack
-- **Zero build step** - Pure HTML/CSS/JS
-- **Tailwind CSS** (via CDN) - For styling
+- **One build step** - Tailwind CSS CLI (was: CDN runtime; see `reports/perf-audit.md` R-1)
 - **Vanilla JavaScript** - No framework dependencies
 - **Hash-based routing** - SPA without a bundler
 

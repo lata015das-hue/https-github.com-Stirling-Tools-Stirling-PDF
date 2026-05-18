@@ -1,0 +1,15 @@
+{
+  "name": "stirling-pdf-free-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zero-runtime frontend for Stirling-PDF. The only build step is Tailwind CSS.",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --watch",
+    "build": "npm run build:css",
+    "lighthouse": "npm run build:css && npx -y @lhci/cli@0.13.x autorun"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

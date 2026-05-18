@@ -1,0 +1,95 @@
+# Build verification — fast feedback on every push and PR.
+#
+# Runs `npm install && npm run build:css` plus the static-analysis lints
+# (R-3 content globs, R-4 image attributes) and verifies dist/tailwind.css
+# is non-empty. This is the broad guard: it triggers on every push to every
+# branch, not just PRs, so devs see breakage before opening the PR.
+#
+# Tracked in `reports/perf-audit.md` as R-5.
+#
+# Why this is separate from the Lighthouse workflow:
+#   - This runs on every push (any branch) and every PR. Lighthouse only
+#     runs on PRs and on push to main, because Lighthouse is expensive
+#     (~3 min) and noisy on shared runners.
+#   - Build red vs. Lighthouse red are different signals; surfacing them
+#     as separate checks makes review faster.
+#   - This finishes in ~30 s, so feedback is tight.
+#
+# Cost: build runs twice per PR (once here, once inside lighthouse.yml).
+# That's an accepted trade-off — the alternative is uploading the
+# dist/tailwind.css artifact between jobs, which is more machinery than
+# this repo currently needs. Revisit if CI minutes become a concern.
+
+name: Build
+
+on:
+  pull_request:
+    # Only path-ignore truly inert files — anything that could change a
+    # class string or template should trigger a build to confirm the
+    # purged CSS still covers it.
+    paths-ignore:
+      - "reports/**"
+      - ".kiro/specs/**"
+      - ".kiro/hooks/**"
+      - "**/*.md"
+  push:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      # R-3: every class-bearing file is covered by tailwind.config.js
+      # `content` globs. Running this BEFORE the build catches the failure
+      # mode "build succeeds but CSS silently misses a class" with a
+      # clearer error than reading purged CSS by hand.
+      - name: Audit Tailwind content globs (R-3)
+        run: python3 .kiro/scripts/audit_tailwind_content.py
+
+      # R-4: shipping images carry width/height/alt/loading. No-op today
+      # (zero images in repo); fires the moment one is added.
+      - name: Lint image attributes (R-4)
+        run: python3 .kiro/scripts/lint_images.py
+
+      - name: Build CSS
+        run: npm run build:css
+
+      - name: Verify CSS artifact
+        run: |
+          if [ ! -f dist/tailwind.css ]; then
+            echo "::error::dist/tailwind.css is missing. \`npm run build:css\` did not produce output."
+            exit 1
+          fi
+          SIZE=$(wc -c < dist/tailwind.css)
+          GZ_SIZE=$(gzip -c dist/tailwind.css | wc -c)
+          echo "dist/tailwind.css = $SIZE bytes ($GZ_SIZE gzip)."
+          echo "::notice::dist/tailwind.css = $SIZE bytes ($GZ_SIZE gzip). Lighthouse stylesheet budget: 51200 bytes."
+          if [ "$SIZE" -lt 5000 ]; then
+            echo "::error::dist/tailwind.css is suspiciously small ($SIZE bytes). Build probably failed silently."
+            exit 1
+          fi
+
+      - name: Upload built CSS as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-tailwind-css
+          path: dist/tailwind.css
+          retention-days: 7
+          if-no-files-found: error

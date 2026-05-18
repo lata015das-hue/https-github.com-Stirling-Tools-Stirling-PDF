@@ -1,0 +1,38 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": ".",
+      "url": ["http://localhost/index.html"],
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop",
+        "skipAudits": ["uses-http2"]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance":      ["warn",  { "minScore": 0.85 }],
+        "categories:accessibility":    ["warn",  { "minScore": 0.90 }],
+        "categories:best-practices":   ["warn",  { "minScore": 0.85 }],
+        "categories:seo":              ["warn",  { "minScore": 0.90 }],
+
+        "largest-contentful-paint":    ["error", { "maxNumericValue": 2500 }],
+        "cumulative-layout-shift":     ["error", { "maxNumericValue": 0.1 }],
+        "total-blocking-time":         ["warn",  { "maxNumericValue": 300 }],
+
+        "resource-summary:script:size":       ["warn",  { "maxNumericValue": 61440 }],
+        "resource-summary:stylesheet:size":   ["warn",  { "maxNumericValue": 51200 }],
+        "resource-summary:font:size":         ["error", { "maxNumericValue": 0 }],
+        "resource-summary:third-party:count": ["error", { "maxNumericValue": 0 }],
+        "resource-summary:total:size":        ["warn",  { "maxNumericValue": 256000 }],
+
+        "uses-long-cache-ttl":         "off",
+        "is-on-https":                 "off",
+        "redirects-http":              "off"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

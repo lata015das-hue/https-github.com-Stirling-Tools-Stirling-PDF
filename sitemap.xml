@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Generated: 2026-05-18
+  NOTE: Replace the host below with the real production domain before deploying.
+        Each <url> below uses the SPA hash-route URL of the current frontend
+        (index.html#/tool/<id>). Once Phase-1 of the content pipeline is done
+        and static /pages/<category>/<tool>.html pages exist, rebuild this file
+        from those static URLs (which crawlers can index reliably).
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home -->
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- ===== PAGE OPERATIONS ===== -->
+  <url><loc>https://example.com/index.html#/tool/merge-pdfs</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/split-pages</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/remove-pages</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/rotate-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/rearrange-pages</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/scale-pages</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/crop</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/add-page-numbers</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/multi-page-layout</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/extract-pages</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-single-page</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/overlay-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/booklet-imposition</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- ===== CONVERT ===== -->
+  <url><loc>https://example.com/index.html#/tool/pdf-to-img</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/img-to-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-word</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-presentation</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-text</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-html</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/html-to-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/markdown-to-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/file-to-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-pdfa</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-csv</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-xml</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-markdown</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/eml-to-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/pdf-to-epub</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- ===== SECURITY ===== -->
+  <url><loc>https://example.com/index.html#/tool/add-password</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/remove-password</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/change-permissions</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/add-watermark</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/cert-sign</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/remove-cert-sign</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/sanitize-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/auto-redact</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://example.com/index.html#/tool/validate-signature</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/timestamp-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/unlock-pdf-forms</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- ===== OTHER TOOLS ===== -->
+  <url><loc>https://example.com/index.html#/tool/ocr-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/extract-images</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/flatten</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/update-metadata</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/remove-blanks</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/remove-annotations</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/get-info-on-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://example.com/index.html#/tool/add-stamp</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/add-attachments</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://example.com/index.html#/tool/show-javascript</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://example.com/index.html#/tool/edit-table-of-contents</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- ===== ADVANCED ===== -->
+  <url><loc>https://example.com/index.html#/tool/compress-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://example.com/index.html#/tool/repair</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://example.com/index.html#/tool/auto-rename</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://example.com/index.html#/tool/extract-image-scans</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/scanner-effect</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://example.com/index.html#/tool/replace-invert-pdf</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+</urlset>

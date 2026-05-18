@@ -1,0 +1,92 @@
+# Lighthouse CI — perf budget on every PR.
+#
+# Builds the site (npm install + npm run build:css), then runs Lighthouse three
+# times against the resulting `index.html` and asserts against the budget in
+# `.lighthouserc.json`. Reports are uploaded to temporary public storage so the
+# PR check links to a viewable Lighthouse report.
+#
+# Tracked in `reports/perf-audit.md` as R-2.
+#
+# Deliberately scoped:
+#   - Skips docs-only PRs (reports/, content/**/*.mdx, .kiro/specs/, *.md).
+#     Performance can't change because of a markdown edit.
+#   - Runs on every push to main so the main-branch baseline is always fresh.
+
+name: Lighthouse
+
+on:
+  pull_request:
+    paths-ignore:
+      - "reports/**"
+      - "content/**/*.mdx"
+      - ".kiro/specs/**"
+      - ".kiro/hooks/**"
+      - "**/*.md"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      # R-3: confirm every class-bearing file is covered by tailwind.config.js
+      # `content` globs BEFORE we build. If a class string lives outside the
+      # globs, those classes get purged from production CSS and silently
+      # don't render. The script also prints a bounded size estimate so the
+      # built artifact below has something to compare against.
+      - name: Audit Tailwind content globs (R-3)
+        run: python3 .kiro/scripts/audit_tailwind_content.py
+
+      # R-4: enforce <img>/<picture>/markdown-image attributes from
+      # .kiro/steering/performance-rules.md §1. No-op today (repo has zero
+      # images); fires the moment a PR adds one without width/height/alt/
+      # loading. Failures are printed as ::error file=...,line=...:: so
+      # they show up inline in PR review.
+      - name: Lint image attributes (R-4)
+        run: python3 .kiro/scripts/lint_images.py
+
+      - name: Build CSS
+        run: npm run build:css
+
+      # Catch the "build ran but produced an empty / tiny file" failure mode
+      # with a clear error rather than letting Lighthouse fail mysteriously
+      # downstream. 5 KB is well below any plausible Tailwind purged output
+      # but well above the empty/error case.
+      - name: Verify CSS artifact
+        run: |
+          if [ ! -f dist/tailwind.css ]; then
+            echo "::error::dist/tailwind.css is missing. \`npm run build:css\` did not produce output."
+            exit 1
+          fi
+          SIZE=$(wc -c < dist/tailwind.css)
+          GZ_SIZE=$(gzip -c dist/tailwind.css | wc -c)
+          echo "dist/tailwind.css = $SIZE bytes ($GZ_SIZE gzip)."
+          echo "::notice::dist/tailwind.css real size: $SIZE bytes ($GZ_SIZE gzip). Lighthouse budget: 51200 bytes."
+          if [ "$SIZE" -lt 5000 ]; then
+            echo "::error::dist/tailwind.css is suspiciously small ($SIZE bytes). Build probably failed silently."
+            exit 1
+          fi
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: "./.lighthouserc.json"
+          uploadArtifacts: true
+          temporaryPublicStorage: true

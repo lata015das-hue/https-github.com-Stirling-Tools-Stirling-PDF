@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Replace the host below with the production domain before deploying.
+Sitemap: https://example.com/sitemap.xml
