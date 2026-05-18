@@ -118,10 +118,18 @@ function renderPage(meta, related) {
     <title>${meta.title}</title>
     <meta name="description" content="${meta.description}">
     <link rel="canonical" href="https://example.com/${isAr ? 'ar/' : ''}tools/${meta.toolId}.html">
+    <link rel="alternate" hreflang="en" href="https://example.com/tools/${meta.toolId}.html">
+    <link rel="alternate" hreflang="ar" href="https://example.com/ar/tools/${meta.toolId}.html">
+    <link rel="alternate" hreflang="x-default" href="https://example.com/tools/${meta.toolId}.html">
     <meta property="og:title" content="${meta.title}">
     <meta property="og:description" content="${meta.description}">
+    <meta property="og:url" content="https://example.com/${isAr ? 'ar/' : ''}tools/${meta.toolId}.html">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="${isAr ? 'ar_SA' : 'en_US'}">
+    <meta property="og:locale:alternate" content="${isAr ? 'en_US' : 'ar_SA'}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="${meta.title}">
+    <meta name="twitter:description" content="${meta.description}">
     <link rel="stylesheet" href="${cssPath}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="application/ld+json" data-generated="schema-generator">
