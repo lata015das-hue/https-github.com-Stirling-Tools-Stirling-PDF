@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}" dir="{{DIR}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <meta name="keywords" content="{{META_KEYWORDS}}">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Stirling PDF">
+    <link rel="canonical" href="https://stirlingpdf.com/tools/{{LANG}}/{{SLUG}}.html">
+
+    <!-- Hreflang Alternates -->
+    <link rel="alternate" hreflang="en" href="https://stirlingpdf.com/tools/en/{{SLUG}}.html">
+    <link rel="alternate" hreflang="ar" href="https://stirlingpdf.com/tools/ar/{{SLUG}}.html">
+    <link rel="alternate" hreflang="x-default" href="https://stirlingpdf.com/tools/en/{{SLUG}}.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{OG_TITLE}}">
+    <meta property="og:description" content="{{OG_DESCRIPTION}}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://stirlingpdf.com/tools/{{LANG}}/{{SLUG}}.html">
+    <meta property="og:locale" content="{{OG_LOCALE}}">
+    <meta property="og:site_name" content="Stirling PDF">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{OG_TITLE}}">
+    <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+
+    <!-- Preload & Performance -->
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "{{BREADCRUMB_HOME}}",
+                "item": "https://stirlingpdf.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "{{BREADCRUMB_TOOLS}}",
+                "item": "https://stirlingpdf.com/tools/{{LANG}}/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "{{BREADCRUMB_CURRENT}}",
+                "item": "https://stirlingpdf.com/tools/{{LANG}}/{{SLUG}}.html"
+            }
+        ]
+    }
+    </script>
+
+    <!-- SoftwareApplication Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Stirling PDF - {{TOOL_NAME}}",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web Browser, Windows, Mac, Linux, Android, iOS",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "description": "{{META_DESCRIPTION}}",
+        "url": "https://stirlingpdf.com/tools/{{LANG}}/{{SLUG}}.html"
+    }
+    </script>
+
+    <!-- HowTo Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "{{HOWTO_TITLE}}",
+        "description": "{{HOWTO_DESCRIPTION}}",
+        "step": [
+            {{HOWTO_STEPS}}
+        ],
+        "tool": {
+            "@type": "HowToTool",
+            "name": "Stirling PDF"
+        }
+    }
+    </script>
+
+    <!-- FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {{FAQ_SCHEMA_ITEMS}}
+        ]
+    }
+    </script>
+
+    <style>
+        .faq-answer { display: none; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-item.open .faq-icon { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="bg-blue-700 text-white py-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <nav class="flex justify-between items-center">
+                <a href="../../index.html" class="text-2xl font-bold">Stirling PDF</a>
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-white hover:text-blue-200 font-medium">{{NAV_HOME}}</a>
+                    <span class="text-blue-300">|</span>
+                    <a href="../en/{{SLUG}}.html" class="px-3 py-1 rounded {{LANG_EN_ACTIVE}} text-sm font-medium">English</a>
+                    <a href="../ar/{{SLUG}}.html" class="px-3 py-1 rounded {{LANG_AR_ACTIVE}} text-sm font-medium">عربي</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== BREADCRUMBS ==================== -->
+    <nav class="max-w-6xl mx-auto px-4 py-3" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm text-gray-600">
+            <li><a href="../../index.html" class="hover:text-blue-700">{{BREADCRUMB_HOME}}</a></li>
+            <li><span class="text-gray-400">/</span></li>
+            <li><a href="./index.html" class="hover:text-blue-700">{{BREADCRUMB_TOOLS}}</a></li>
+            <li><span class="text-gray-400">/</span></li>
+            <li class="text-blue-700 font-medium" aria-current="page">{{BREADCRUMB_CURRENT}}</li>
+        </ol>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+
+        <!-- ==================== HERO SECTION ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">{{H1}}</h1>
+            <p class="text-xl text-gray-600 mb-6 max-w-3xl">{{HERO_SUBTITLE}}</p>
+            <a href="../../index.html" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition shadow-md">
+                {{CTA_PRIMARY}}
+            </a>
+        </section>
+
+        <!-- ==================== TOOL INTERFACE ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10" id="tool-interface">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">{{SECTION_TOOL_TITLE}}</h2>
+            <div class="border-2 border-dashed border-blue-300 rounded-xl p-12 text-center bg-blue-50">
+                <div class="text-5xl mb-4">📄</div>
+                <p class="text-lg text-gray-600 mb-4">{{TOOL_UPLOAD_TEXT}}</p>
+                <a href="../../index.html" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    {{CTA_OPEN_TOOL}}
+                </a>
+            </div>
+        </section>
+
+        <!-- ==================== SEO CONTENT: WHAT IS ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">{{SECTION_WHAT_IS_TITLE}}</h2>
+            <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                {{CONTENT_WHAT_IS}}
+            </div>
+        </section>
+
+        <!-- ==================== SEO CONTENT: HOW TO (HowTo Schema) ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{SECTION_HOWTO_TITLE}}</h2>
+            <div class="space-y-6">
+                {{HOWTO_STEPS_HTML}}
+            </div>
+        </section>
+
+        <!-- ==================== SEO CONTENT: FEATURES ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{SECTION_FEATURES_TITLE}}</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {{FEATURES_HTML}}
+            </div>
+        </section>
+
+        <!-- ==================== SEO CONTENT: USE CASES ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{SECTION_USECASES_TITLE}}</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                {{USECASES_HTML}}
+            </div>
+        </section>
+
+        <!-- ==================== SEO CONTENT: TIPS ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">{{SECTION_TIPS_TITLE}}</h2>
+            <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                {{CONTENT_TIPS}}
+            </div>
+        </section>
+
+        <!-- ==================== FAQ SECTION ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{SECTION_FAQ_TITLE}}</h2>
+            <div class="space-y-3">
+                {{FAQ_HTML}}
+            </div>
+        </section>
+
+        <!-- ==================== RELATED TOOLS ==================== -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">{{SECTION_RELATED_TITLE}}</h2>
+            <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {{RELATED_TOOLS_HTML}}
+            </div>
+        </section>
+
+        <!-- ==================== FINAL CTA ==================== -->
+        <section class="bg-blue-700 text-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
+            <h2 class="text-3xl font-bold mb-4">{{CTA_FINAL_TITLE}}</h2>
+            <p class="text-blue-100 text-lg mb-6 max-w-2xl mx-auto">{{CTA_FINAL_SUBTITLE}}</p>
+            <a href="../../index.html" class="inline-block bg-white text-blue-700 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-50 transition shadow-md">
+                {{CTA_FINAL_BUTTON}}
+            </a>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-gray-800 text-gray-300 py-10 mt-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-3">Stirling PDF</h3>
+                    <p class="text-gray-400 text-sm">{{FOOTER_DESCRIPTION}}</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-3">{{FOOTER_TOOLS_TITLE}}</h3>
+                    <ul class="space-y-2 text-sm">
+                        {{FOOTER_TOOLS_LINKS}}
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-3">{{FOOTER_LANGUAGES_TITLE}}</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../en/{{SLUG}}.html" class="hover:text-white">English</a></li>
+                        <li><a href="../ar/{{SLUG}}.html" class="hover:text-white">العربية</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+                <p>&copy; 2024-2026 Stirling PDF — {{FOOTER_COPYRIGHT}}</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FAQ Toggle Script -->
+    <script>
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                item.classList.toggle('open');
+            });
+        });
+    </script>
+
+</body>
+</html>
