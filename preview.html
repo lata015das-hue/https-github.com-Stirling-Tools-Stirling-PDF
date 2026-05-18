@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Stirling PDF">
+    <meta name="description" content="56+ free PDF tools - merge, split, convert, compress. No license required.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.5'%3E%3Crect width='24' height='24' rx='4' fill='%232563eb'/%3E%3Cpath d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/%3E%3C/svg%3E">
+    <title>Stirling PDF - Free Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                800: '#1e40af', 900: '#1e3a8a',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .animate-spin { animation: spin 1s linear infinite; }
+      .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Demo Mode Banner -->
+    <div id="demoBanner" class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800">
+      <strong>Preview Mode</strong> &mdash; UI demonstration only. Backend required for actual processing.
+      <button id="toggleDemo" class="ml-3 underline font-medium hover:text-amber-900">Connect to Backend</button>
+    </div>
+    <div id="app"></div>
+
+<script src="i18n.js"></script>
+<script>
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+// ==================================
+// CONFIG
+// ==================================
+let BACKEND_URL = 'http://localhost:8080';
+let DEMO_MODE = true;
+let CURRENT_LANG = localStorage.getItem('stirling-lang') || navigator.language?.replace('_','-') || 'en-GB';
+// Resolve to closest match
+if (!I18N[CURRENT_LANG]) {
+  const prefix = CURRENT_LANG.split('-')[0];
+  CURRENT_LANG = Object.keys(I18N).find(k => k.startsWith(prefix)) || 'en-GB';
+}
+
+function t(key) {
+  const lang = I18N[CURRENT_LANG];
+  return (lang && lang[key]) || (I18N['en-GB'] && I18N['en-GB'][key]) || key;
+}
+function toolName(toolId) { return t('t.' + toolId); }
+function toolDesc(toolId) { return t('d.' + toolId); }
+function setLanguage(lang) {
+  CURRENT_LANG = lang;
+  localStorage.setItem('stirling-lang', lang);
+  document.documentElement.dir = I18N_RTL.includes(lang) ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  router.resolve();
+}
+let BACKEND_STATUS = {
+  premiumEnabled: false,
+  runningProOrHigher: false,
+  runningEE: false,
+  license: 'NORMAL',
+  endpointsAvailability: {}, // { 'merge-pdfs': { enabled: true, reason: null } }
+  checked: false,
+};
+
+// SAFETY: Whitelist of EXACT endpoints we will call. Built from the TOOLS list at runtime.
+// Anything not in this set is rejected, regardless of prefix.
+let ALLOWED_EXACT_ENDPOINTS = null;
+
+function buildAllowedSet() {
+  if (ALLOWED_EXACT_ENDPOINTS) return ALLOWED_EXACT_ENDPOINTS;
+  ALLOWED_EXACT_ENDPOINTS = new Set(TOOLS.map(t => t.endpoint));
+  return ALLOWED_EXACT_ENDPOINTS;
+}
+
+// SAFETY: Blacklist - paths that require a license and must NEVER be called
+const FORBIDDEN_API_PREFIXES = [
+  '/api/v1/team/',                    // PremiumEndpoint (TeamController)
+  '/api/v1/audit/',                   // EnterpriseEndpoint (AuditDashboardController, AuditRestController)
+  '/api/v1/ai/',                      // AI Engine (AiEngineController, MathAuditorAgentController, PdfCommentAgentController)
+  '/api/v1/admin/',                   // Admin features (AdminLicenseController, AdminJobController, etc.)
+  '/api/v1/proprietary/',             // Proprietary signatures (SignatureController), UI data
+  '/api/v1/auth/',                    // Auth (proprietary AuthController)
+  '/api/v1/database/',                // Enterprise database (DatabaseControllerEnterprise)
+  '/api/v1/storage/',                 // Storage (FileStorageController)
+  '/api/v1/workflow/',                // Workflow (WorkflowParticipantController)
+  '/api/v1/security/cert-sign/sessions', // Signing sessions are proprietary
+  '/api/v1/admin/server-certificate', // Server certificate admin
+];
+
+function isAllowedEndpoint(endpoint) {
+  // Defence-in-depth: must match the exact whitelist AND not match the blacklist.
+  buildAllowedSet();
+  if (!ALLOWED_EXACT_ENDPOINTS.has(endpoint)) return false;
+  if (FORBIDDEN_API_PREFIXES.some(p => endpoint.startsWith(p))) return false;
+  return true;
+}
+
+// ==================================
+// TOOLS DATA
+// ==================================
+const CATEGORIES = [
+  { id: 'page-operations', name: 'Page Operations', icon: '📄', color: 'bg-blue-500', colorLight: 'bg-blue-50 text-blue-700 border-blue-200' },
+  { id: 'convert', name: 'Convert', icon: '🔄', color: 'bg-green-500', colorLight: 'bg-green-50 text-green-700 border-green-200' },
+  { id: 'security', name: 'Security', icon: '🔒', color: 'bg-red-500', colorLight: 'bg-red-50 text-red-700 border-red-200' },
+  { id: 'other', name: 'Other Tools', icon: '🔧', color: 'bg-purple-500', colorLight: 'bg-purple-50 text-purple-700 border-purple-200' },
+  { id: 'advance', name: 'Advanced', icon: '⚡', color: 'bg-orange-500', colorLight: 'bg-orange-50 text-orange-700 border-orange-200' },
+];
+
+const TOOLS = [
+  { id: 'merge-pdfs', name: 'Merge PDFs', desc: 'Combine multiple PDF files into one document', category: 'page-operations', endpoint: '/api/v1/general/merge-pdfs', multi: true },
+  { id: 'split-pages', name: 'Split PDF', desc: 'Split a PDF into multiple files by page ranges', category: 'page-operations', endpoint: '/api/v1/general/split-pages', fields: [{ name: 'pages', label: 'Pages (e.g. 1,3,5-9)', type: 'text' }] },
+  { id: 'remove-pages', name: 'Remove Pages', desc: 'Remove specific pages from a PDF', category: 'page-operations', endpoint: '/api/v1/general/remove-pages', fields: [{ name: 'pages', label: 'Pages to remove (e.g. 2,4,6)', type: 'text' }] },
+  { id: 'rotate-pdf', name: 'Rotate PDF', desc: 'Rotate all pages in a PDF', category: 'page-operations', endpoint: '/api/v1/general/rotate-pdf', fields: [{ name: 'angle', label: 'Rotation Angle', type: 'select', options: [{v:'90',l:'90°'},{v:'180',l:'180°'},{v:'270',l:'270°'}] }] },
+  { id: 'rearrange-pages', name: 'Rearrange Pages', desc: 'Reorder pages in a PDF document', category: 'page-operations', endpoint: '/api/v1/general/rearrange-pages', fields: [{ name: 'pageOrder', label: 'New page order (e.g. 3,1,2,4)', type: 'text' }] },
+  { id: 'scale-pages', name: 'Scale Pages', desc: 'Scale PDF pages to different paper sizes', category: 'page-operations', endpoint: '/api/v1/general/scale-pages', fields: [{ name: 'pageSize', label: 'Target Page Size', type: 'select', options: [{v:'A4',l:'A4'},{v:'Letter',l:'Letter'},{v:'A3',l:'A3'},{v:'Legal',l:'Legal'}] }] },
+  { id: 'crop', name: 'Crop PDF', desc: 'Crop margins from PDF pages', category: 'page-operations', endpoint: '/api/v1/general/crop' },
+  { id: 'add-page-numbers', name: 'Add Page Numbers', desc: 'Add page numbers to your PDF', category: 'page-operations', endpoint: '/api/v1/general/add-page-numbers' },
+  { id: 'multi-page-layout', name: 'Multi-Page Layout', desc: 'Put multiple pages on one sheet', category: 'page-operations', endpoint: '/api/v1/general/multi-page-layout', fields: [{ name: 'pagesPerSheet', label: 'Pages per sheet', type: 'select', options: [{v:'2',l:'2'},{v:'4',l:'4'},{v:'9',l:'9'},{v:'16',l:'16'}] }] },
+  { id: 'extract-pages', name: 'Extract Pages', desc: 'Extract specific pages into a new PDF', category: 'page-operations', endpoint: '/api/v1/general/extract-pages', fields: [{ name: 'pages', label: 'Pages to extract (e.g. 1-3,7)', type: 'text' }] },
+  { id: 'pdf-to-single-page', name: 'PDF to Single Page', desc: 'Convert multi-page PDF to one long page', category: 'page-operations', endpoint: '/api/v1/general/pdf-to-single-page' },
+  { id: 'overlay-pdf', name: 'Overlay PDFs', desc: 'Overlay one PDF on top of another', category: 'page-operations', endpoint: '/api/v1/general/overlay-pdf', multi: true },
+  { id: 'booklet-imposition', name: 'Booklet Imposition', desc: 'Arrange pages for booklet printing', category: 'page-operations', endpoint: '/api/v1/general/booklet-imposition' },
+
+  { id: 'pdf-to-img', name: 'PDF to Image', desc: 'Convert PDF pages to PNG/JPEG images', category: 'convert', endpoint: '/api/v1/convert/pdf/img', fields: [{ name: 'imageFormat', label: 'Image Format', type: 'select', options: [{v:'png',l:'PNG'},{v:'jpeg',l:'JPEG'},{v:'gif',l:'GIF'}] }] },
+  { id: 'img-to-pdf', name: 'Image to PDF', desc: 'Convert images to a PDF document', category: 'convert', endpoint: '/api/v1/convert/img/pdf', multi: true },
+  { id: 'pdf-to-word', name: 'PDF to Word', desc: 'Convert PDF to DOCX (Word) format', category: 'convert', endpoint: '/api/v1/convert/pdf/word' },
+  { id: 'pdf-to-presentation', name: 'PDF to PowerPoint', desc: 'Convert PDF to PPTX presentation', category: 'convert', endpoint: '/api/v1/convert/pdf/presentation' },
+  { id: 'pdf-to-text', name: 'PDF to Text', desc: 'Extract all text content from PDF', category: 'convert', endpoint: '/api/v1/convert/pdf/text' },
+  { id: 'pdf-to-html', name: 'PDF to HTML', desc: 'Convert PDF to HTML web page', category: 'convert', endpoint: '/api/v1/convert/pdf/html' },
+  { id: 'html-to-pdf', name: 'HTML to PDF', desc: 'Convert HTML files to PDF', category: 'convert', endpoint: '/api/v1/convert/html/pdf' },
+  { id: 'markdown-to-pdf', name: 'Markdown to PDF', desc: 'Convert Markdown files to PDF', category: 'convert', endpoint: '/api/v1/convert/markdown/pdf' },
+  { id: 'file-to-pdf', name: 'File to PDF', desc: 'Convert various file types to PDF', category: 'convert', endpoint: '/api/v1/convert/file/pdf' },
+  { id: 'pdf-to-pdfa', name: 'PDF to PDF/A', desc: 'Convert PDF to archival PDF/A format', category: 'convert', endpoint: '/api/v1/convert/pdf/pdfa' },
+  { id: 'pdf-to-csv', name: 'PDF to CSV', desc: 'Extract tables from PDF to CSV', category: 'convert', endpoint: '/api/v1/convert/pdf/csv' },
+  { id: 'pdf-to-xml', name: 'PDF to XML', desc: 'Convert PDF to XML format', category: 'convert', endpoint: '/api/v1/convert/pdf/xml' },
+  { id: 'pdf-to-markdown', name: 'PDF to Markdown', desc: 'Convert PDF to Markdown format', category: 'convert', endpoint: '/api/v1/convert/pdf/markdown' },
+  { id: 'eml-to-pdf', name: 'Email to PDF', desc: 'Convert email (.eml) files to PDF', category: 'convert', endpoint: '/api/v1/convert/eml/pdf' },
+  { id: 'pdf-to-epub', name: 'PDF to EPUB', desc: 'Convert PDF to EPUB e-book format', category: 'convert', endpoint: '/api/v1/convert/pdf/epub' },
+
+  { id: 'add-password', name: 'Add Password', desc: 'Encrypt PDF with password protection', category: 'security', endpoint: '/api/v1/security/add-password', fields: [{ name: 'password', label: 'Password', type: 'password', required: true }] },
+  { id: 'remove-password', name: 'Remove Password', desc: 'Remove password protection from PDF', category: 'security', endpoint: '/api/v1/security/remove-password', fields: [{ name: 'password', label: 'Current Password', type: 'password', required: true }] },
+  { id: 'change-permissions', name: 'Change Permissions', desc: 'Modify PDF access permissions', category: 'security', endpoint: '/api/v1/security/change-permissions' },
+  { id: 'add-watermark', name: 'Add Watermark', desc: 'Add text watermark to all pages', category: 'security', endpoint: '/api/v1/security/add-watermark', fields: [{ name: 'watermarkText', label: 'Watermark Text', type: 'text', required: true }] },
+  { id: 'cert-sign', name: 'Certificate Sign', desc: 'Digitally sign PDF with certificate', category: 'security', endpoint: '/api/v1/security/cert-sign' },
+  { id: 'remove-cert-sign', name: 'Remove Signatures', desc: 'Remove digital signatures from PDF', category: 'security', endpoint: '/api/v1/security/remove-cert-sign' },
+  { id: 'sanitize-pdf', name: 'Sanitize PDF', desc: 'Remove potentially dangerous content', category: 'security', endpoint: '/api/v1/security/sanitize-pdf' },
+  { id: 'auto-redact', name: 'Auto Redact', desc: 'Automatically redact sensitive information', category: 'security', endpoint: '/api/v1/security/auto-redact' },
+  { id: 'validate-signature', name: 'Validate Signature', desc: 'Verify PDF digital signatures', category: 'security', endpoint: '/api/v1/security/validate-signature' },
+  { id: 'timestamp-pdf', name: 'Timestamp PDF', desc: 'Add trusted timestamp to PDF', category: 'security', endpoint: '/api/v1/security/timestamp-pdf' },
+  { id: 'unlock-pdf-forms', name: 'Unlock PDF Forms', desc: 'Unlock locked PDF form fields', category: 'security', endpoint: '/api/v1/security/unlock-pdf-forms' },
+
+  { id: 'ocr-pdf', name: 'OCR PDF', desc: 'Make scanned PDFs searchable with text recognition', category: 'other', endpoint: '/api/v1/misc/ocr-pdf', fields: [{ name: 'languages', label: 'Language', type: 'select', options: [{v:'eng',l:'English'},{v:'ara',l:'Arabic'},{v:'fra',l:'French'},{v:'deu',l:'German'},{v:'spa',l:'Spanish'},{v:'chi_sim',l:'Chinese'}] }] },
+  { id: 'extract-images', name: 'Extract Images', desc: 'Extract all embedded images from PDF', category: 'other', endpoint: '/api/v1/misc/extract-images' },
+  { id: 'flatten', name: 'Flatten PDF', desc: 'Flatten forms, annotations, and layers', category: 'other', endpoint: '/api/v1/misc/flatten' },
+  { id: 'update-metadata', name: 'Update Metadata', desc: 'Edit PDF title, author, and metadata', category: 'other', endpoint: '/api/v1/misc/update-metadata', fields: [{ name: 'title', label: 'Title', type: 'text' }, { name: 'author', label: 'Author', type: 'text' }] },
+  { id: 'remove-blanks', name: 'Remove Blank Pages', desc: 'Detect and remove blank pages', category: 'other', endpoint: '/api/v1/misc/remove-blanks' },
+  { id: 'remove-annotations', name: 'Remove Annotations', desc: 'Strip all annotations and comments', category: 'other', endpoint: '/api/v1/misc/remove-annotations' },
+  { id: 'get-info-on-pdf', name: 'PDF Info', desc: 'Get detailed information about a PDF file', category: 'other', endpoint: '/api/v1/security/get-info-on-pdf' },
+  { id: 'add-stamp', name: 'Add Stamp', desc: 'Add a stamp/badge to PDF pages', category: 'other', endpoint: '/api/v1/misc/add-stamp' },
+  { id: 'add-attachments', name: 'Add Attachments', desc: 'Embed files as attachments in PDF', category: 'other', endpoint: '/api/v1/misc/add-attachments' },
+  { id: 'show-javascript', name: 'Show JavaScript', desc: 'Display embedded JavaScript in PDF', category: 'other', endpoint: '/api/v1/misc/show-javascript' },
+  { id: 'edit-table-of-contents', name: 'Edit Table of Contents', desc: 'Edit PDF bookmarks and table of contents', category: 'other', endpoint: '/api/v1/misc/edit-table-of-contents' },
+
+  { id: 'compress-pdf', name: 'Compress PDF', desc: 'Reduce PDF file size while preserving quality', category: 'advance', endpoint: '/api/v1/misc/compress-pdf', fields: [{ name: 'optimizeLevel', label: 'Compression Level', type: 'select', options: [{v:'1',l:'Low (best quality)'},{v:'2',l:'Medium'},{v:'3',l:'High (smallest size)'}] }] },
+  { id: 'repair', name: 'Repair PDF', desc: 'Attempt to fix corrupted or damaged PDFs', category: 'advance', endpoint: '/api/v1/misc/repair' },
+  { id: 'auto-rename', name: 'Auto Rename', desc: 'Rename PDF based on its content', category: 'advance', endpoint: '/api/v1/misc/auto-rename' },
+  { id: 'extract-image-scans', name: 'Extract Scans', desc: 'Split individual scanned images from pages', category: 'advance', endpoint: '/api/v1/misc/extract-image-scans' },
+  { id: 'scanner-effect', name: 'Scanner Effect', desc: 'Make PDF look like a physical scan', category: 'advance', endpoint: '/api/v1/misc/scanner-effect' },
+  { id: 'replace-invert-pdf', name: 'Replace/Invert Colors', desc: 'Invert or replace colors in PDF', category: 'advance', endpoint: '/api/v1/misc/replace-invert-pdf' },
+];
+
+const getToolsByCategory = (catId) => TOOLS.filter(t => t.category === catId);
+const getToolById = (id) => TOOLS.find(t => t.id === id);
+const getCategoryById = (id) => CATEGORIES.find(c => c.id === id);
+
+// ==================================
+// API
+// ==================================
+async function checkBackendStatus() {
+  try {
+    // 1) Get app config (license status)
+    const cfgRes = await fetch(BACKEND_URL + '/api/v1/config/app-config');
+    if (!cfgRes.ok) throw new Error('Cannot reach backend');
+    const cfg = await cfgRes.json();
+    BACKEND_STATUS.premiumEnabled = cfg.premiumEnabled === true;
+    BACKEND_STATUS.runningProOrHigher = cfg.runningProOrHigher === true;
+    BACKEND_STATUS.runningEE = cfg.runningEE === true;
+    BACKEND_STATUS.license = cfg.license || 'NORMAL';
+
+    // 2) Get availability of every endpoint we use
+    const endpointKeys = TOOLS.map(t => endpointKeyFromUri(t.endpoint)).filter(Boolean);
+    const params = new URLSearchParams();
+    endpointKeys.forEach(k => params.append('endpoints', k));
+    const availRes = await fetch(BACKEND_URL + '/api/v1/config/endpoints-availability?' + params.toString());
+    if (availRes.ok) {
+      BACKEND_STATUS.endpointsAvailability = await availRes.json();
+    }
+    BACKEND_STATUS.checked = true;
+    return true;
+  } catch (e) {
+    BACKEND_STATUS.checked = false;
+    return false;
+  }
+}
+
+// Convert /api/v1/general/merge-pdfs -> 'merge-pdfs', /api/v1/convert/pdf/img -> 'pdf-to-img'
+function endpointKeyFromUri(uri) {
+  if (!uri || !uri.includes('/api/v1')) return null;
+  const parts = uri.split('/').filter(Boolean);
+  // ['api','v1','<group>','<endpoint>'] or ['api','v1','convert','pdf','img']
+  if (parts.length < 4) return null;
+  if (parts[2] === 'convert' && parts.length >= 5) {
+    return parts[3] + '-to-' + parts[4];
+  }
+  return parts[3];
+}
+
+async function processPdf(endpoint, files, params = {}) {
+  // ===== SAFETY GATE 1: whitelist enforcement =====
+  if (!isAllowedEndpoint(endpoint)) {
+    throw new Error('Blocked: this endpoint is not on the free-tier whitelist.');
+  }
+
+  // ===== SAFETY GATE 2: Demo mode short-circuit =====
+  if (DEMO_MODE) {
+    await new Promise(r => setTimeout(r, 1500));
+    throw new Error('Demo mode: enable backend connection to actually process files. Click "Connect to Backend" in the top banner.');
+  }
+
+  // ===== SAFETY GATE 3: backend reports endpoint disabled =====
+  const key = endpointKeyFromUri(endpoint);
+  if (key && BACKEND_STATUS.checked) {
+    const avail = BACKEND_STATUS.endpointsAvailability[key];
+    if (avail && avail.enabled === false) {
+      throw new Error(`Endpoint disabled by backend (reason: ${avail.reason || 'unknown'}). This usually means it requires a license, missing dependency, or has been turned off in config.`);
+    }
+  }
+
+  const formData = new FormData();
+  files.forEach(file => formData.append('fileInput', file));
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== '') formData.append(key, String(value));
+  });
+  const response = await fetch(BACKEND_URL + endpoint, { method: 'POST', body: formData });
+  if (!response.ok) {
+    let errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+    if (response.status === 403) errorMsg = 'Forbidden: this endpoint requires a paid license (Server or Enterprise).';
+    try { const text = await response.text(); if (text) errorMsg = text; } catch(e) {}
+    throw new Error(errorMsg);
+  }
+  return await response.blob();
+}
+
+function downloadBlob(blob, filename) {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
+function getResultFilename(toolId, originalName) {
+  const ext = toolId.includes('to-img') ? 'zip' : toolId.includes('to-word') ? 'docx'
+    : toolId.includes('to-presentation') ? 'pptx' : toolId.includes('to-text') ? 'txt'
+    : toolId.includes('to-html') ? 'html' : toolId.includes('to-xml') ? 'xml'
+    : toolId.includes('to-csv') ? 'csv' : toolId.includes('to-markdown') ? 'md'
+    : toolId.includes('to-epub') ? 'epub' : 'pdf';
+  const baseName = originalName ? originalName.replace(/\.[^/.]+$/, '') : 'result';
+  return `${baseName}_${toolId}.${ext}`;
+}
+
+// ==================================
+// ROUTER
+// ==================================
+class Router {
+  constructor() { this.routes = {}; window.addEventListener('hashchange', () => this.resolve()); }
+  add(path, handler) { this.routes[path] = handler; return this; }
+  resolve() {
+    const hash = window.location.hash.slice(1) || '/';
+    if (this.routes[hash]) { this.routes[hash](); return; }
+    for (const [pattern, handler] of Object.entries(this.routes)) {
+      const regex = new RegExp('^' + pattern.replace(/:([^/]+)/g, '([^/]+)') + '$');
+      const match = hash.match(regex);
+      if (match) { handler(...match.slice(1)); return; }
+    }
+    if (this.routes['/']) this.routes['/']();
+  }
+  start() { this.resolve(); }
+}
+const router = new Router();
+
+// ==================================
+// COMPONENTS
+// ==================================
+function renderHeader() {
+  return `
+    <header class="bg-white shadow-sm border-b sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="#/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <div class="bg-primary-600 p-2.5 rounded-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-gray-900">Stirling PDF</h1>
+            <p class="text-xs text-gray-500">Free Tools - No License Required</p>
+          </div>
+        </a>
+        <nav class="flex items-center gap-4">
+          <a href="#/" class="text-gray-600 hover:text-primary-600 transition-colors font-medium text-sm">All Tools</a>
+          <select id="langSelect" onchange="setLanguage(this.value)" class="text-xs border rounded-lg px-2 py-1 bg-white">
+            ${Object.entries(I18N_LANGUAGES).map(([code, name]) => 
+              `<option value="${code}" ${code === CURRENT_LANG ? 'selected' : ''}>${name}</option>`
+            ).join('')}
+          </select>
+          <span class="text-xs px-2 py-1 rounded-full ${DEMO_MODE ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}">
+            ${DEMO_MODE ? '● Demo' : '● Connected'}
+          </span>
+        </nav>
+      </div>
+    </header>
+  `;
+}
+
+function renderToolCard(tool) {
+  const cat = getCategoryById(tool.category);
+  const k = endpointKeyFromUri(tool.endpoint);
+  const avail = BACKEND_STATUS.endpointsAvailability[k];
+  const isDisabled = !DEMO_MODE && BACKEND_STATUS.checked && avail && avail.enabled === false;
+  const disabledOverlay = isDisabled
+    ? `<div class="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200">Unavailable</div>`
+    : '';
+  const cardClasses = isDisabled
+    ? 'opacity-50 cursor-not-allowed pointer-events-none'
+    : 'hover:border-primary-300 hover:shadow-lg';
+  return `
+    <a href="#/tool/${tool.id}" class="group block bg-white rounded-xl border border-gray-200 transition-all duration-200 overflow-hidden relative ${cardClasses}">
+      ${disabledOverlay}
+      <div class="h-1.5 ${cat.color}"></div>
+      <div class="p-5">
+        <div class="flex items-start gap-3">
+          <div class="text-2xl flex-shrink-0 group-hover:scale-110 transition-transform">${cat.icon}</div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">${toolName(tool.id) || tool.name}</h3>
+            <p class="text-sm text-gray-500 mt-1 line-clamp-2">${toolDesc(tool.id) || tool.desc}</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function renderFileUpload(multiple = false) {
+  return `
+    <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer transition-all hover:border-primary-400 hover:bg-gray-50">
+      <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+      </svg>
+      <p class="text-lg font-medium text-gray-700">Drag & drop files here</p>
+      <p class="text-sm text-gray-500 mt-2">or click to browse ${multiple ? '(multiple files allowed)' : ''}</p>
+      <input type="file" id="fileInput" class="hidden" ${multiple ? 'multiple' : ''} accept=".pdf,.png,.jpg,.jpeg,.gif,.tiff,.bmp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.html,.md,.eml">
+    </div>
+    <div id="fileList" class="space-y-2 mt-4"></div>
+  `;
+}
+
+function renderFooter() {
+  return `
+    <footer class="text-center py-6 text-gray-500 text-sm border-t bg-white mt-12">
+      <p>Stirling PDF Free Tools - Open Source PDF Processing</p>
+      <p class="mt-1">Backend: <code class="bg-gray-100 px-2 py-0.5 rounded text-xs">${BACKEND_URL}</code></p>
+      <p class="mt-2 text-xs text-gray-400">${TOOLS.length} free tools available | Powered by <a href="https://github.com/Stirling-Tools/Stirling-PDF" target="_blank" class="text-primary-500 hover:underline">Stirling-PDF</a></p>
+    </footer>
+  `;
+}
+
+// ==================================
+// PAGES
+// ==================================
+const app = document.getElementById('app');
+
+function renderHomePage() {
+  const searchSection = `
+    <div class="text-center space-y-4 py-8">
+      <h2 class="text-3xl font-bold text-gray-900">${t('ui.freeTools')}</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        ${t('ui.noLicense')}
+        <br><span class="text-primary-600 font-medium">No license required. 100% Free.</span>
+      </p>
+      <div class="max-w-md mx-auto relative">
+        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="${t('ui.search')}" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all">
+      </div>
+    </div>
+  `;
+
+  const categoryCards = `
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+      ${CATEGORIES.map(cat => {
+        const count = getToolsByCategory(cat.id).length;
+        return `
+          <a href="#/category/${cat.id}" class="bg-white rounded-xl border border-gray-200 p-5 text-center hover:shadow-lg hover:border-primary-300 transition-all group">
+            <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">${cat.icon}</div>
+            <h3 class="font-semibold text-gray-900 text-sm">${t('cat.' + cat.id) || cat.name}</h3>
+            <p class="text-xs text-gray-500 mt-1">${count} tools</p>
+          </a>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  const allToolsByCategory = CATEGORIES.map(cat => {
+    const catTools = getToolsByCategory(cat.id);
+    return `
+      <div class="space-y-4 mb-10">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <span class="${cat.color} w-3 h-3 rounded-full inline-block"></span>
+            ${cat.name}
+          </h3>
+          <a href="#/category/${cat.id}" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
+            View all (${catTools.length}) &rarr;
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${catTools.slice(0, 6).map(renderToolCard).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      ${searchSection}
+      <div id="searchResults" class="hidden"></div>
+      <div id="mainContent">
+        ${categoryCards}
+        ${allToolsByCategory}
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  const mainContent = document.getElementById('mainContent');
+
+  searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    if (!q) { searchResults.classList.add('hidden'); mainContent.classList.remove('hidden'); return; }
+    mainContent.classList.add('hidden');
+    searchResults.classList.remove('hidden');
+    const filtered = TOOLS.filter(t =>
+      t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.id.includes(q)
+    );
+    searchResults.innerHTML = `
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Results (${filtered.length})</h3>
+      ${filtered.length === 0
+        ? '<p class="text-gray-500 text-center py-8">No tools found</p>'
+        : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${filtered.map(renderToolCard).join('')}</div>`
+      }
+    `;
+  });
+}
+
+function renderCategoryPage(categoryId) {
+  const cat = getCategoryById(categoryId);
+  if (!cat) { renderHomePage(); return; }
+  const catTools = getToolsByCategory(categoryId);
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      <div class="flex items-center gap-4 mb-8">
+        <a href="#/" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </a>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">${cat.icon} ${cat.name}</h2>
+          <p class="text-gray-500">${catTools.length} free tools available</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${catTools.map(renderToolCard).join('')}
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+}
+
+function renderToolPage(toolId) {
+  const tool = getToolById(toolId);
+  if (!tool) { renderHomePage(); return; }
+  const cat = getCategoryById(tool.category);
+
+  // Safety check: is this endpoint allowed?
+  if (!isAllowedEndpoint(tool.endpoint)) {
+    app.innerHTML = `${renderHeader()}<main class="max-w-3xl mx-auto px-4 py-12 text-center">
+      <h2 class="text-2xl font-bold text-red-700">Tool Blocked</h2>
+      <p class="text-gray-600 mt-2">This tool is not available in the free-tier frontend.</p>
+      <a href="#/" class="inline-block mt-4 text-primary-600 underline">Back to home</a>
+    </main>${renderFooter()}`;
+    return;
+  }
+
+  // Check live availability
+  const k = endpointKeyFromUri(tool.endpoint);
+  const avail = BACKEND_STATUS.endpointsAvailability[k];
+  const isDisabled = !DEMO_MODE && BACKEND_STATUS.checked && avail && avail.enabled === false;
+  const disabledBanner = isDisabled ? `
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+      <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <p class="font-medium text-red-800">This endpoint is disabled by the backend</p>
+        <p class="text-sm text-red-600 mt-1">Reason: <code>${avail.reason || 'unknown'}</code>. This typically means the endpoint requires a license, has missing system dependencies (e.g. tesseract, libreoffice, ghostscript), or has been turned off in configuration.</p>
+      </div>
+    </div>
+  ` : '';
+  const fieldsHtml = (tool.fields || []).map(field => {
+    if (field.type === 'select') {
+      return `<div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">${field.label} ${field.required ? '<span class="text-red-500">*</span>' : ''}</label>
+        <select id="field_${field.name}" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none">
+          <option value="">Select...</option>
+          ${field.options.map(o => `<option value="${o.v}">${o.l}</option>`).join('')}
+        </select>
+      </div>`;
+    }
+    return `<div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">${field.label} ${field.required ? '<span class="text-red-500">*</span>' : ''}</label>
+      <input type="${field.type || 'text'}" id="field_${field.name}" placeholder="${field.placeholder || ''}" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none">
+    </div>`;
+  }).join('');
+
+  app.innerHTML = `
+    ${renderHeader()}
+    <main class="max-w-3xl mx-auto px-4 py-6 space-y-6">
+      <div class="flex items-center gap-4">
+        <a href="#/category/${tool.category}" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </a>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">${tool.name}</h2>
+          <p class="text-gray-500">${tool.desc}</p>
+        </div>
+        <span class="ml-auto text-sm px-3 py-1 rounded-full border ${cat.colorLight}">${cat.name}</span>
+      </div>
+      ${disabledBanner}
+      <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-6 ${isDisabled ? 'opacity-60' : ''}">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Upload File(s)</label>
+          ${renderFileUpload(tool.multi)}
+        </div>
+        ${fieldsHtml ? `<div class="space-y-4 pt-4 border-t"><h3 class="text-sm font-semibold text-gray-700">Options</h3>${fieldsHtml}</div>` : ''}
+        <div class="flex gap-3 pt-4 border-t">
+          <button id="processBtn" class="flex-1 bg-primary-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors" disabled>Process PDF</button>
+          <button id="resetBtn" class="px-6 py-3 border border-gray-300 rounded-xl font-medium text-gray-700 hover:bg-gray-50 transition-colors hidden">Reset</button>
+        </div>
+        <div id="statusArea"></div>
+      </div>
+      <div class="bg-gray-100 rounded-xl p-4">
+        <p class="text-xs text-gray-500 font-mono">API Endpoint: <span class="text-gray-700">POST ${tool.endpoint}</span></p>
+      </div>
+    </main>
+    ${renderFooter()}
+  `;
+  setupToolPageInteraction(tool);
+}
+
+function setupToolPageInteraction(tool) {
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const processBtn = document.getElementById('processBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const statusArea = document.getElementById('statusArea');
+  let selectedFiles = [];
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-primary-500', 'bg-primary-50');
+    dropZone.classList.remove('border-gray-300');
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-primary-500', 'bg-primary-50');
+    dropZone.classList.add('border-gray-300');
+  });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-primary-500', 'bg-primary-50');
+    dropZone.classList.add('border-gray-300');
+    addFiles(Array.from(e.dataTransfer.files));
+  });
+  fileInput.addEventListener('change', (e) => addFiles(Array.from(e.target.files)));
+
+  function addFiles(newFiles) {
+    selectedFiles = tool.multi ? [...selectedFiles, ...newFiles] : newFiles.slice(0, 1);
+    updateFileList();
+  }
+  function updateFileList() {
+    processBtn.disabled = selectedFiles.length === 0;
+    if (selectedFiles.length === 0) { fileList.innerHTML = ''; return; }
+    fileList.innerHTML = `
+      <h4 class="text-sm font-medium text-gray-700">Selected Files (${selectedFiles.length})</h4>
+      ${selectedFiles.map((f, i) => `
+        <div class="flex items-center gap-3 bg-white border rounded-lg p-3">
+          <svg class="w-5 h-5 text-primary-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-700 truncate">${f.name}</p>
+            <p class="text-xs text-gray-500">${(f.size / 1024 / 1024).toFixed(2)} MB</p>
+          </div>
+          <button onclick="window.removeFile(${i})" class="p-1 hover:bg-red-50 rounded-full transition-colors">
+            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      `).join('')}
+    `;
+    window.removeFile = (idx) => { selectedFiles.splice(idx, 1); updateFileList(); };
+  }
+
+  processBtn.addEventListener('click', async () => {
+    if (selectedFiles.length === 0) return;
+    const params = {};
+    (tool.fields || []).forEach(field => {
+      const el = document.getElementById(`field_${field.name}`);
+      if (el && el.value) params[field.name] = el.value;
+    });
+    processBtn.disabled = true;
+    processBtn.innerHTML = `<svg class="w-5 h-5 animate-spin inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Processing...`;
+    resetBtn.classList.remove('hidden');
+    statusArea.innerHTML = '';
+    try {
+      const blob = await processPdf(tool.endpoint, selectedFiles, params);
+      const filename = getResultFilename(tool.id, selectedFiles[0]?.name);
+      statusArea.innerHTML = `
+        <div class="bg-green-50 border border-green-200 rounded-xl p-5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div>
+              <p class="font-medium text-green-800">Processing Complete!</p>
+              <p class="text-sm text-green-600">File size: ${(blob.size / 1024 / 1024).toFixed(2)} MB</p>
+            </div>
+          </div>
+          <button id="downloadBtn" class="bg-green-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download
+          </button>
+        </div>
+      `;
+      document.getElementById('downloadBtn').addEventListener('click', () => downloadBlob(blob, filename));
+      processBtn.innerHTML = 'Process PDF';
+      processBtn.disabled = false;
+    } catch (err) {
+      statusArea.innerHTML = `
+        <div class="bg-red-50 border border-red-200 rounded-xl p-5">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div>
+              <p class="font-medium text-red-800">${DEMO_MODE ? 'Demo Mode Active' : 'Processing Failed'}</p>
+              <p class="text-sm text-red-600 mt-1">${err.message}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      processBtn.innerHTML = 'Process PDF';
+      processBtn.disabled = false;
+    }
+  });
+
+  resetBtn.addEventListener('click', () => {
+    selectedFiles = []; updateFileList();
+    statusArea.innerHTML = '';
+    resetBtn.classList.add('hidden');
+    processBtn.innerHTML = 'Process PDF';
+    processBtn.disabled = true;
+    (tool.fields || []).forEach(field => {
+      const el = document.getElementById(`field_${field.name}`);
+      if (el) el.value = '';
+    });
+  });
+}
+
+// ==================================
+// DEMO MODE TOGGLE
+// ==================================
+document.getElementById('toggleDemo').addEventListener('click', async () => {
+  const url = prompt('Enter Stirling-PDF backend URL:', BACKEND_URL);
+  if (!url || !url.trim()) return;
+  BACKEND_URL = url.trim().replace(/\/$/, '');
+
+  // Show checking state
+  const banner = document.getElementById('demoBanner');
+  banner.innerHTML = `<strong>Checking backend...</strong> <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code>`;
+  banner.className = 'bg-blue-50 border-b border-blue-200 px-4 py-2 text-center text-sm text-blue-800';
+
+  const reachable = await checkBackendStatus();
+  if (!reachable) {
+    banner.innerHTML = `<strong>Cannot reach backend</strong> at <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code> &mdash; check that Stirling-PDF is running.
+      <button onclick="location.reload()" class="ml-3 underline font-medium">Reset</button>`;
+    banner.className = 'bg-red-50 border-b border-red-200 px-4 py-2 text-center text-sm text-red-800';
+    return;
+  }
+
+  // ===== SAFETY: Refuse to enable a paid backend =====
+  if (BACKEND_STATUS.runningProOrHigher || BACKEND_STATUS.runningEE) {
+    banner.innerHTML = `<strong>Refusing to connect.</strong>
+      Backend reports a paid license (${BACKEND_STATUS.license}). This frontend is free-tier only and will only run open-core endpoints.
+      <button id="forceConnect" class="ml-3 underline font-medium">Connect anyway (free tools only)</button>
+      <button onclick="location.reload()" class="ml-3 underline font-medium">Reset</button>`;
+    banner.className = 'bg-orange-50 border-b border-orange-200 px-4 py-2 text-center text-sm text-orange-800';
+    document.getElementById('forceConnect').addEventListener('click', () => activateBackendMode(true));
+    return;
+  }
+
+  activateBackendMode(false);
+});
+
+function activateBackendMode(forced) {
+  DEMO_MODE = false;
+  // Count how many of our tools are actually enabled
+  const enabledCount = TOOLS.filter(t => {
+    const k = endpointKeyFromUri(t.endpoint);
+    const a = BACKEND_STATUS.endpointsAvailability[k];
+    return !a || a.enabled !== false;
+  }).length;
+  const banner = document.getElementById('demoBanner');
+  banner.innerHTML = `<strong>${forced ? 'Connected (paid backend, free tools only)' : 'Connected'}</strong>
+    to <code class="bg-white px-2 py-0.5 rounded">${BACKEND_URL}</code> &mdash;
+    license: <code>${BACKEND_STATUS.license}</code> | enabled tools: <strong>${enabledCount}/${TOOLS.length}</strong>
+    <button onclick="location.reload()" class="ml-3 underline font-medium hover:text-green-900">Switch to Demo Mode</button>`;
+  banner.className = 'bg-green-50 border-b border-green-200 px-4 py-2 text-center text-sm text-green-800';
+  router.resolve();
+}
+
+// ==================================
+// INIT
+// ==================================
+router
+  .add('/', renderHomePage)
+  .add('/category/:id', renderCategoryPage)
+  .add('/tool/:id', renderToolPage)
+  .start();
+</script>
+</body>
+</html>
