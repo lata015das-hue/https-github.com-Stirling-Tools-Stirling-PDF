@@ -10,6 +10,7 @@ module.exports = {
   //     `.kiro/steering/performance-rules.md`.
   content: [
     "./index.html",
+    "./preview.html",
     "./js/**/*.js",
     "./src/**/*.{tsx,ts,jsx,js,html}",
     "./content/**/*.{mdx,md}",
